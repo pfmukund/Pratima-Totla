@@ -151,27 +151,32 @@ function SectionNav() {
   const [activeId, setActiveId] = useState(SECTIONS[0].id);
 
   useEffect(() => {
-    const onScroll = () => {
-      setGrown(window.scrollY > 400);
-      // Determine which section is currently in view (closest to ~30% from top)
-      let closest = SECTIONS[0].id;
-      let bestDist = Infinity;
-      const triggerLine = window.innerHeight * 0.3;
-      for (const s of SECTIONS) {
-        const el = document.getElementById(s.id);
-        if (!el) continue;
-        const r = el.getBoundingClientRect();
-        const dist = Math.abs(r.top - triggerLine);
-        if (r.top - triggerLine < 0 && dist < bestDist + window.innerHeight) {
-          bestDist = dist;
-          closest = s.id;
-        }
-      }
-      setActiveId(closest);
-    };
+    // Light scroll listener — reads scrollY only (no layout reflow).
+    const onScroll = () => setGrown(window.scrollY > 400);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    // IntersectionObserver replaces a per-scroll getBoundingClientRect loop.
+    // The thin rootMargin band (30%→30.1% from top) means whichever section's
+    // top edge enters that band is treated as active — same behaviour as the
+    // old trigger-line logic, zero forced reflow.
+    if (typeof IntersectionObserver === 'undefined') return;
+    const ratios = new Map();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => ratios.set(e.target.id, e.isIntersecting));
+        for (const s of SECTIONS) if (ratios.get(s.id)) { setActiveId(s.id); return; }
+      },
+      { rootMargin: '-30% 0px -69.9% 0px', threshold: 0 }
+    );
+    SECTIONS.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
   }, []);
 
   const handleClick = (id) => (e) => {

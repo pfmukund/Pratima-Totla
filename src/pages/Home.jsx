@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, lazy, Suspense } from 'react';
+import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import {
@@ -46,10 +46,262 @@ export default function Home() {
 }
 
 /* =========================================================================
-   HERO — the showstopper. Spotlight + particles + scramble + magnetic CTA +
-   live persona switching driven by the row of persona buttons below.
+   HERO — dispatches to a mobile-first static variant or the desktop
+   motion-heavy variant based on viewport. Mobile version has ZERO framer-
+   motion overhead, ZERO ScrambleText JS, and ZERO cursor-parallax spring
+   hooks — meaningful LCP / TBT wins on mid-range Android.
    ========================================================================= */
 function Hero() {
+  // Initial value is read synchronously so the correct hero paints on first
+  // render (no hydration flash). We also subscribe to the matchMedia change
+  // event so a device rotation / window resize across the 768px breakpoint
+  // swaps the variant instead of leaving the user stuck on the wrong one.
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(min-width: 768px)').matches;
+  });
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const onChange = (e) => setIsDesktop(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return isDesktop ? <DesktopHero /> : <MobileHero />;
+}
+
+/* -------------------- MOBILE HERO — editorial cover with rotating persona portrait -------------------- */
+function MobileHero() {
+  // Start at index 1 (Cultural Icon) so mobile LCP matches desktop LCP — the
+  // preload hint in index.html can point at a single image.
+  const [pIdx, setPIdx] = useState(1);
+  const sectionRef = useRef(null);
+  useEffect(() => {
+    // Only cycle personas while the hero is actually on-screen AND the tab is
+    // visible. Stops wasted re-renders when the user scrolls past or tabs away.
+    let id;
+    let inView = false;
+    const start = () => {
+      if (id) return;
+      id = setInterval(() => setPIdx((i) => (i + 1) % PERSONAS.length), 4500);
+    };
+    const stop = () => { if (id) { clearInterval(id); id = undefined; } };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        inView = e.isIntersecting;
+        if (inView && !document.hidden) start();
+        else stop();
+      },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) io.observe(sectionRef.current);
+    const onVis = () => { if (document.hidden) stop(); else if (inView) start(); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => { stop(); io.disconnect(); document.removeEventListener('visibilitychange', onVis); };
+  }, []);
+  const active = PERSONAS[pIdx];
+  const avifSrc = active.image.replace(/\.webp$/, '.avif');
+
+  return (
+    <section ref={sectionRef} className="relative min-h-[100svh] overflow-hidden bg-ink flex flex-col">
+      {/* Ambient gold glow */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-[10] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 95% 55% at 50% 38%, rgba(212, 175, 55, 0.16) 0%, transparent 65%),' +
+            'radial-gradient(ellipse 70% 45% at 50% 100%, rgba(184, 148, 31, 0.10) 0%, transparent 70%)',
+        }}
+      />
+      <div className="absolute inset-0 -z-[9] vignette opacity-55 pointer-events-none" />
+
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-between px-4 pt-24 pb-6">
+        {/* TOP — Typewriter + Portrait */}
+        <div className="flex flex-col items-center w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mb-5 h-[3.2em] w-full flex items-center justify-center text-center px-4"
+          >
+            <TypewriterIdentity
+              identities={IDENTITIES}
+              className="font-label text-[10.5px] tracking-[0.28em] leading-[1.5] uppercase text-gold-300 font-semibold max-w-full"
+            />
+          </motion.div>
+
+          {/* Large arched portrait — extends near the edges */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-[360px] mx-auto"
+            style={{ aspectRatio: '3 / 4' }}
+          >
+            {/* Corner brackets — scaled for larger frame */}
+            <span aria-hidden className="absolute -top-2 -left-2 w-7 h-7 border-t border-l border-gold-300/70 z-10" />
+            <span aria-hidden className="absolute -top-2 -right-2 w-7 h-7 border-t border-r border-gold-300/70 z-10" />
+            <span aria-hidden className="absolute -bottom-2 -left-2 w-7 h-7 border-b border-l border-gold-300/70 z-10" />
+            <span aria-hidden className="absolute -bottom-2 -right-2 w-7 h-7 border-b border-r border-gold-300/70 z-10" />
+
+            <div
+              className="relative w-full h-full overflow-hidden border border-gold-300/40 shadow-[0_36px_80px_-22px_rgba(212,175,55,0.42)]"
+              style={{ borderRadius: '50% 50% 8px 8px / 37% 37% 2% 2%' }}
+            >
+              {/* Crossfading persona images */}
+              <AnimatePresence mode="sync">
+                <motion.picture
+                  key={active.id}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0"
+                >
+                  <source srcSet={avifSrc} type="image/avif" />
+                  <source srcSet={active.image} type="image/webp" />
+                  <img
+                    src={active.image}
+                    alt={`Dr. Pratima Totla — ${active.title}`}
+                    width="600"
+                    height="800"
+                    fetchPriority={active.id === 'cultural-icon' ? 'high' : 'auto'}
+                    decoding="async"
+                    className="w-full h-full object-cover object-[center_18%]"
+                  />
+                </motion.picture>
+              </AnimatePresence>
+
+              {/* Bottom fade so the plaque sits cleanly on the image */}
+              <span
+                aria-hidden
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(to bottom, transparent 55%, rgba(10,8,6,0.78) 100%)',
+                }}
+              />
+              {/* Warm gold top wash */}
+              <span
+                aria-hidden
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(ellipse at 40% 18%, rgba(212,175,55,0.18), transparent 60%)',
+                  mixBlendMode: 'screen',
+                }}
+              />
+            </div>
+
+            {/* Persona indicator dots — attached above the plaque */}
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 z-20 flex items-center gap-1.5">
+              {PERSONAS.map((p, i) => (
+                <span
+                  key={p.id}
+                  aria-hidden
+                  className={`block h-px transition-all duration-500 ${
+                    i === pIdx ? 'w-6 bg-gold-300' : 'w-3 bg-gold-300/30'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Title plaque — attached to bottom of frame */}
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-7 w-[80%] max-w-[280px] z-10">
+              <div className="relative bg-ink/95 backdrop-blur-sm border border-gold-300/45 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.9)]">
+                {/* Gold top cap */}
+                <span aria-hidden className="absolute top-0 left-0 right-0 h-[2px] bg-gold-gradient" />
+                {/* Side tick marks */}
+                <span aria-hidden className="absolute top-1/2 -translate-y-1/2 -left-1.5 w-1.5 h-1.5 rotate-45 bg-gold-300" />
+                <span aria-hidden className="absolute top-1/2 -translate-y-1/2 -right-1.5 w-1.5 h-1.5 rotate-45 bg-gold-300" />
+
+                <div className="px-5 py-3 text-center">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={active.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <div className="font-display italic text-gold-static text-[22px] leading-none">
+                        {active.title}
+                      </div>
+                      <div className="font-label text-[9px] tracking-[0.32em] text-gold-300/80 uppercase mt-1.5">
+                        {active.role}
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* MIDDLE — Name + tagline */}
+        <div className="flex flex-col items-center w-full mt-12">
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display leading-[0.88] -tracking-[0.03em] text-center mb-4 text-[58px]"
+          >
+            <span className="block text-gold-gradient text-shadow-gold">Pratima</span>
+            <span className="block italic text-cream/95 -mt-[0.08em]">Totla</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="font-display italic text-[16px] text-bone/95 leading-relaxed text-center max-w-[20rem]"
+          >
+            {TAGLINE}
+          </motion.p>
+        </div>
+
+        {/* BOTTOM — CTA + scroll cue */}
+        <div className="flex flex-col items-center w-full mt-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.1 }}
+          >
+            <Link
+              to="/portfolio"
+              className="group inline-flex items-center gap-3 pl-7 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink no-tap-highlight shadow-[0_14px_40px_-12px_rgba(212,175,55,0.55)]"
+            >
+              <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
+                Enter the Portfolio
+              </span>
+              <span className="w-10 h-10 rounded-full bg-ink grid place-items-center">
+                <ArrowRight />
+              </span>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1.4 }}
+            className="flex flex-col items-center gap-2 mt-6"
+          >
+            <span className="font-label text-[9px] tracking-[0.5em] text-gold-300/55 uppercase">
+              Scroll
+            </span>
+            <motion.span
+              aria-hidden
+              animate={{ scaleY: [0.25, 1, 0.25], opacity: [0.25, 0.9, 0.25] }}
+              transition={{ duration: 1.9, repeat: Infinity, ease: 'easeInOut' }}
+              className="block w-px h-8 bg-gradient-to-b from-gold-300/80 to-transparent origin-top"
+            />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -------------------- DESKTOP HERO (original motion-heavy) -------------------- */
+function DesktopHero() {
   const [activePersona, setActivePersona] = useState(1);
   const isDesktop = useIsDesktop();
   const heroRef = useRef(null);
@@ -308,22 +560,34 @@ function Hero() {
    STATS — animated count-ups for instant credibility
    ========================================================================= */
 function Stats() {
+  const isDesktop = useIsDesktop();
   const stats = [
     { value: 250, suffix: '+', label: 'Newsrooms Reached' },
     { value: 15, suffix: '+', label: 'National & International Honours' },
     { value: 8, suffix: '', label: 'Years of Public Leadership' },
   ];
   return (
-    <section className="relative py-10 md:py-14 border-y border-gold-400/15 overflow-hidden bg-ink">
-      <Spotlight size={1100} intensity={0.08} />
-      <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-3 gap-4 md:gap-6 place-items-center">
+    <section className="relative py-8 md:py-14 border-y border-gold-400/15 overflow-hidden bg-ink">
+      {isDesktop && (
+        <Suspense fallback={null}>
+          <Spotlight size={1100} intensity={0.08} />
+        </Suspense>
+      )}
+      <div className="relative max-w-[20rem] md:max-w-[1400px] mx-auto px-4 md:px-10 grid grid-cols-3 gap-2 md:gap-6 place-items-center">
         {stats.map((s, i) => (
           <Reveal key={i} delay={i * 0.08}>
-            <div className="text-center" data-cursor="hover">
-              <div className="font-display text-3xl md:text-5xl lg:text-6xl text-gold-gradient leading-none mb-2">
+            <div className="relative text-center px-2 md:px-0" data-cursor="hover">
+              {/* Mobile-only thin gold divider on the left of items 2 & 3 */}
+              {i > 0 && (
+                <span
+                  aria-hidden
+                  className="md:hidden absolute left-0 top-1/2 -translate-y-1/2 h-10 w-px bg-gradient-to-b from-transparent via-gold-300/40 to-transparent"
+                />
+              )}
+              <div className="font-display text-2xl md:text-5xl lg:text-6xl text-gold-gradient leading-none mb-1.5 md:mb-2">
                 <CountUp end={s.value} suffix={s.suffix} duration={1.8} />
               </div>
-              <div className="font-label text-[11px] md:text-[13px] tracking-[0.28em] uppercase text-bone/80">
+              <div className="font-label text-[9px] md:text-[13px] tracking-[0.22em] md:tracking-[0.28em] uppercase text-bone/80 leading-tight">
                 {s.label}
               </div>
             </div>
@@ -351,7 +615,7 @@ function PillarsMarquee() {
     'Founder · I Can Campaign',
   ];
   return (
-    <section className="relative py-10 border-y border-gold-400/15 bg-ink-soft overflow-hidden">
+    <section className="relative py-6 md:py-10 border-y border-gold-400/15 bg-ink-soft overflow-hidden">
       <Marquee speed={48} className="font-display italic text-3xl md:text-5xl text-cream/85">
         {items.map((it, i) => (
           <span key={i} className="inline-flex items-center gap-12 px-4">
@@ -376,8 +640,9 @@ function Diamond() {
    PERSONAS DEEP DIVE — three big tilt cards
    ========================================================================= */
 function Personas() {
+  const isDesktop = useIsDesktop();
   return (
-    <section className="relative py-32 md:py-40 max-w-[1400px] mx-auto px-6 md:px-10">
+    <section className="relative py-14 md:py-40 max-w-[1400px] mx-auto px-6 md:px-10">
       <Reveal>
         <div className="flex items-center gap-4 mb-6">
           <span className="block w-10 h-px bg-gold-300" />
@@ -385,65 +650,79 @@ function Personas() {
             The Three Lives
           </span>
         </div>
-        <h2 className="font-display text-5xl md:text-7xl lg:text-8xl text-cream leading-[1.0] mb-6 max-w-4xl">
+        <h2 className="font-display text-5xl md:text-7xl lg:text-8xl text-cream leading-[1.0] mb-20 md:mb-6 max-w-4xl">
           One <span className="italic text-gold-static">woman</span>, three<br />
           immutable <span className="italic">callings</span>.
         </h2>
-        <p className="text-fog max-w-2xl text-lg leading-relaxed">
+        <p className="text-fog max-w-2xl text-base md:text-lg leading-relaxed">
           From the corridors of national governance to the global stage of cultural
           diplomacy, and the quiet villages of grassroots service — one signature is etched
           across all three lives: dignity.
         </p>
       </Reveal>
 
-      <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="mt-8 md:mt-16 grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {PERSONAS.map((p, i) => (
           <Reveal key={p.id} delay={i * 0.12}>
-            <Tilt3D max={9} className="h-full">
-              <article
-                className="group relative h-full p-8 md:p-9 rounded-2xl border border-gold-400/15 bg-coal/70 overflow-hidden backdrop-blur-sm flex flex-col luxe-shadow"
-                data-cursor="hover"
-              >
-                <div
-                  className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-700 -z-10 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${p.image})` }}
-                />
-                <div className="absolute inset-0 -z-[5] bg-gradient-to-t from-coal via-coal/80 to-coal/30" />
-                <Spotlight size={420} intensity={0.18} color={p.accent.replace('rgba(', '').replace(')', '').split(',').slice(0, 3).join(',')} />
-
-                <div className="relative flex items-baseline gap-3 mb-6">
-                  <span className="font-display italic text-3xl text-gold-300/80">{p.eyebrow}</span>
-                  <span className="font-label text-[16px] tracking-[0.32em] uppercase text-bone/60">
-                    Persona
-                  </span>
-                </div>
-
-                <h3 className="relative font-display text-3xl md:text-4xl text-cream mb-3 leading-[1.05] break-words min-h-[2.5em] flex items-start">
-                  {p.title}
-                </h3>
-                <div className="relative font-label text-[15px] tracking-[0.22em] uppercase text-gold-300 mb-1">
-                  {p.role}
-                </div>
-                <div className="relative font-display italic text-bone/80 mb-6">{p.org}</div>
-
-                <p className="relative text-fog text-[15px] leading-relaxed mb-8 flex-1">
-                  {p.description}
-                </p>
-
-                <Link
-                  to="/portfolio"
-                  className="relative inline-flex items-center gap-2 font-label text-[16px] tracking-[0.32em] uppercase text-gold-300 group-hover:text-gold-100 transition-colors"
-                  data-cursor="hover"
-                >
-                  Explore the Body of Work
-                  <span className="block w-6 h-px bg-current transition-all duration-500 group-hover:w-12" />
-                </Link>
-              </article>
-            </Tilt3D>
+            {isDesktop ? (
+              <Tilt3D max={9} className="h-full">
+                <PersonaCard p={p} isDesktop={isDesktop} />
+              </Tilt3D>
+            ) : (
+              <PersonaCard p={p} isDesktop={isDesktop} />
+            )}
           </Reveal>
         ))}
       </div>
     </section>
+  );
+}
+
+function PersonaCard({ p, isDesktop }) {
+  return (
+    <article
+      className="group relative h-full p-8 md:p-9 rounded-2xl border border-gold-400/15 bg-coal/70 overflow-hidden backdrop-blur-sm flex flex-col luxe-shadow"
+      data-cursor="hover"
+    >
+      <div
+        className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-700 -z-10 bg-cover bg-center"
+        style={{ backgroundImage: `url(${p.image})` }}
+      />
+      <div className="absolute inset-0 -z-[5] bg-gradient-to-t from-coal via-coal/80 to-coal/30" />
+      {isDesktop && (
+        <Suspense fallback={null}>
+          <Spotlight size={420} intensity={0.18} color={p.accent.replace('rgba(', '').replace(')', '').split(',').slice(0, 3).join(',')} />
+        </Suspense>
+      )}
+
+      <div className="relative flex items-baseline gap-3 mb-6">
+        <span className="font-display italic text-3xl text-gold-300/80">{p.eyebrow}</span>
+        <span className="font-label text-[16px] tracking-[0.32em] uppercase text-bone/60">
+          Persona
+        </span>
+      </div>
+
+      <h3 className="relative font-display text-3xl md:text-4xl text-cream mb-3 leading-[1.05] break-words min-h-[2.5em] flex items-start">
+        {p.title}
+      </h3>
+      <div className="relative font-label text-[15px] tracking-[0.22em] uppercase text-gold-300 mb-1">
+        {p.role}
+      </div>
+      <div className="relative font-display italic text-bone/80 mb-6">{p.org}</div>
+
+      <p className="relative text-fog text-[15px] leading-relaxed mb-8 flex-1">
+        {p.description}
+      </p>
+
+      <Link
+        to="/portfolio"
+        className="relative inline-flex items-center gap-2 font-label text-[16px] tracking-[0.32em] uppercase text-gold-300 group-hover:text-gold-100 transition-colors"
+        data-cursor="hover"
+      >
+        Explore the Body of Work
+        <span className="block w-6 h-px bg-current transition-all duration-500 group-hover:w-12" />
+      </Link>
+    </article>
   );
 }
 
@@ -452,14 +731,14 @@ function Personas() {
    ========================================================================= */
 function ManifestoSection() {
   return (
-    <section className="relative py-32 md:py-40 bg-ink-soft border-y border-gold-400/15 overflow-hidden">
+    <section className="relative py-14 md:py-40 bg-ink-soft border-y border-gold-400/15 overflow-hidden">
       <div className="absolute inset-0 opacity-[0.04] pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: 'radial-gradient(circle at 20% 30%, #d4af37 0%, transparent 50%), radial-gradient(circle at 80% 70%, #b8941f 0%, transparent 50%)',
         }} />
       </div>
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 mb-8 md:mb-16">
           <Reveal className="lg:col-span-5">
             <div className="flex items-center gap-4 mb-5">
               <span className="block w-10 h-px bg-gold-300" />
@@ -500,7 +779,7 @@ function ManifestoSection() {
           ))}
         </StaggerReveal>
 
-        <div className="mt-12">
+        <div className="mt-8 md:mt-12">
           <Magnetic>
             <Link
               to="/portfolio"
@@ -522,7 +801,7 @@ function ManifestoSection() {
    ========================================================================= */
 function PressStrip() {
   return (
-    <section className="relative py-32 max-w-[1400px] mx-auto px-6 md:px-10">
+    <section className="relative py-14 md:py-32 max-w-[1400px] mx-auto px-6 md:px-10">
       <Reveal>
         <div className="flex items-center gap-4 mb-5">
           <span className="block w-10 h-px bg-gold-300" />
@@ -594,6 +873,7 @@ function PressStrip() {
    CLOSING CTA
    ========================================================================= */
 function ClosingCTA() {
+  const isDesktop = useIsDesktop();
   return (
     <section className="relative py-32 md:py-44 overflow-hidden">
       <div className="absolute inset-0 -z-10">
@@ -601,7 +881,11 @@ function ClosingCTA() {
           background: 'radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 60%)',
         }} />
       </div>
-      <Spotlight size={1100} intensity={0.12} />
+      {isDesktop && (
+        <Suspense fallback={null}>
+          <Spotlight size={1100} intensity={0.12} />
+        </Suspense>
+      )}
       <div className="relative max-w-4xl mx-auto px-6 text-center">
         <Reveal>
           <div className="font-label text-[16px] tracking-[0.5em] uppercase text-gold-300 mb-7">

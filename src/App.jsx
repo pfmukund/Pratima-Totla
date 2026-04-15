@@ -4,10 +4,14 @@ import { lazy, Suspense } from 'react';
 import Layout from './components/layout/Layout.jsx';
 import DesktopFX from './components/fx/DesktopOnly.jsx';
 import PageTransition from './components/PageTransition.jsx';
-import AmbientAudio from './components/AmbientAudio.jsx';
+import DeferredMount from './components/DeferredMount.jsx';
 import ScrollProgress from './components/fx/ScrollProgress.jsx';
 import Home from './pages/Home.jsx';
 import { routeLoaders } from './routes.js';
+
+// AmbientAudio is non-critical chrome — lazy-load + idle-mount so the audio
+// button (and the mp3 fetch it triggers) never competes with LCP work.
+const AmbientAudio = lazy(() => import('./components/AmbientAudio.jsx'));
 
 const About = lazy(routeLoaders['/about']);
 const Portfolio = lazy(routeLoaders['/portfolio']);
@@ -39,7 +43,9 @@ export default function App() {
       <ScrollProgress />
       <DesktopFX />
       <PageTransition />
-      <AmbientAudio />
+      <DeferredMount delayMs={1800}>
+        <Suspense fallback={null}><AmbientAudio /></Suspense>
+      </DeferredMount>
       <div className="grain-overlay" aria-hidden />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

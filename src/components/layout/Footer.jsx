@@ -74,9 +74,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-8 mb-12">
           {/* Navigate — left on desktop, left half on mobile */}
           <div className="md:col-span-3 md:order-1">
-            <h4 className="font-label text-[16px] tracking-[0.32em] text-gold-300 uppercase mb-5">
+            <h3 className="font-label text-[16px] tracking-[0.32em] text-gold-300 uppercase mb-5">
               Navigate
-            </h4>
+            </h3>
             <nav className="flex flex-col gap-3">
               {NAV_LINKS.map((link) => (
                 <Link
@@ -128,12 +128,12 @@ export default function Footer() {
 
           {/* Office — right on desktop, right half on mobile */}
           <div className="md:col-span-4 md:order-3 md:text-right md:flex md:flex-col md:items-end">
-            <h4 className="font-label text-[16px] tracking-[0.32em] text-gold-300 uppercase mb-5">
+            <h3 className="font-label text-[16px] tracking-[0.32em] text-gold-300 uppercase mb-5">
               The Office
-            </h4>
+            </h3>
             <a
               href={`mailto:${CONTACT.email}`}
-              className="font-display italic text-2xl md:text-3xl text-cream hover:text-gold-300 transition-colors duration-300 mb-3 break-all"
+              className="font-display italic text-2xl md:text-3xl text-cream hover:text-gold-300 transition-colors duration-300 mb-3 break-words"
               data-cursor="hover"
             >
               {CONTACT.email}

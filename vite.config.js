@@ -8,9 +8,26 @@ import os from 'node:os'
 // stalls on Windows (native fs watches + cloud sync fight each other).
 const CACHE_DIR = path.join(os.tmpdir(), 'vite-pratima-totla')
 
+// Turns Vite's auto-injected <link rel="stylesheet"> into a non-render-blocking
+// preload+swap pattern. Critical CSS is already inlined in index.html, so the
+// main stylesheet loading async costs nothing visually.
+function asyncCSS() {
+  return {
+    name: 'async-css',
+    apply: 'build',
+    transformIndexHtml(html) {
+      return html.replace(
+        /<link rel="stylesheet"([^>]*?)href="([^"]+)"([^>]*)>/g,
+        (match, pre, href, post) =>
+          `<link rel="preload" as="style"${pre}href="${href}"${post} onload="this.onload=null;this.rel='stylesheet'"><noscript>${match}</noscript>`
+      )
+    },
+  }
+}
+
 export default defineConfig({
   cacheDir: CACHE_DIR,
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), asyncCSS()],
   base: process.env.VITE_BASE || '/',
   build: {
     target: 'es2020',

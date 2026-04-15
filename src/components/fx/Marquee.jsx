@@ -10,7 +10,9 @@ export default function Marquee({ children, reverse = false, className = '', spe
     >
       <div className={`inline-flex items-center gap-12 ${animClass} ${pauseOnHover ? 'hover:[animation-play-state:paused]' : ''}`}>
         <div className="inline-flex items-center gap-12">{children}</div>
-        <div className="inline-flex items-center gap-12" aria-hidden>{children}</div>
+        {/* `inert` removes the duplicated copy from the a11y tree AND the tab
+           order — screen readers don't double-read, and focus skips the links. */}
+        <div className="inline-flex items-center gap-12" aria-hidden inert="">{children}</div>
       </div>
     </div>
   );

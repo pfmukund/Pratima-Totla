@@ -22,13 +22,23 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    // Lock body scroll and wire Escape-to-close while the mobile drawer is open.
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') setMobileOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => { document.body.style.overflow = prev; window.removeEventListener('keydown', onKey); };
+  }, [mobileOpen]);
+
   return (
     <>
       <motion.header
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-4 left-4 right-4 md:top-6 md:left-6 md:right-6 z-50"
+        className="fixed top-[max(1rem,env(safe-area-inset-top))] left-[max(1rem,env(safe-area-inset-left))] right-[max(1rem,env(safe-area-inset-right))] md:top-6 md:left-6 md:right-6 z-50"
       >
         <div
           className={`mx-auto max-w-[1400px] flex items-center justify-between px-6 md:px-9 py-3.5 md:py-4 rounded-full transition-all duration-500 ${
@@ -128,7 +138,7 @@ export default function Nav() {
                   <path d="M6 6l12 12M18 6L6 18" />
                 </svg>
               </button>
-              <div className="font-display italic text-3xl text-gold-static mb-4">Pratima Totla</div>
+              <div className="font-display italic text-5xl text-gold-static mb-6 leading-none tracking-tight">Pratima Totla</div>
               {ITEMS.map((item, i) => (
                 <motion.div
                   key={item.to}

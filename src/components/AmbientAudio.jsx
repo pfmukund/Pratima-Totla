@@ -5,19 +5,23 @@ const STORAGE_KEY = 'pt.ambient.muted';
 const TARGET_VOLUME = 0.12;
 
 export default function AmbientAudio() {
+  // Default to muted — the 3.2 MB mp3 is not downloaded until the user
+  // explicitly opts in by clicking the button. Huge mobile payload win.
   const [muted, setMuted] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem(STORAGE_KEY) === '1';
+    if (typeof window === 'undefined') return true;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored === null ? true : stored === '1';
   });
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef(null);
 
   const ensureAudio = useCallback(() => {
     if (audioRef.current) return audioRef.current;
-    const a = new Audio('/audio/ambient.mp3');
+    const a = new Audio();
     a.loop = true;
-    a.preload = 'auto';
+    a.preload = 'none';
     a.volume = 0;
+    a.src = '/audio/ambient.mp3';
     audioRef.current = a;
     return a;
   }, []);
@@ -56,24 +60,17 @@ export default function AmbientAudio() {
     setPlaying(false);
   }, [fadeTo]);
 
-  // Attempt autoplay on mount (will likely fail until user interacts).
-  useEffect(() => {
-    if (muted) return;
-    start();
-  }, [muted, start]);
-
-  // Fallback: kick off audio on first user gesture if autoplay was blocked.
+  // If the user has previously unmuted, resume on first interaction. First-time
+  // visitors stay muted (audio button shows the muted state) — no mp3 fetched.
   useEffect(() => {
     if (muted || playing) return;
     const resume = () => { start(); };
     const opts = { once: true, passive: true };
     window.addEventListener('pointerdown', resume, opts);
     window.addEventListener('keydown', resume, opts);
-    window.addEventListener('touchstart', resume, opts);
     return () => {
       window.removeEventListener('pointerdown', resume, opts);
       window.removeEventListener('keydown', resume, opts);
-      window.removeEventListener('touchstart', resume, opts);
     };
   }, [muted, playing, start]);
 

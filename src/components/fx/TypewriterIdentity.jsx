@@ -41,8 +41,8 @@ export default function TypewriterIdentity({
   }, [text, phase, index, list, typingSpeed, erasingSpeed, holdMs]);
 
   return (
-    <span className={`inline-flex items-center ${className}`} aria-live="polite">
-      <span>{text}</span>
+    <span className={`inline ${className}`} aria-live="polite">
+      {text}
       <motion.span
         animate={{ opacity: [1, 0.2, 1] }}
         transition={{ duration: 0.95, repeat: Infinity, ease: 'linear' }}

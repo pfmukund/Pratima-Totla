@@ -23,10 +23,14 @@
          round-trip. Cormorant Garamond 400 is the hero H1 font — preload it
          so LCP doesn't wait on font discovery. -->
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/cormorant-garamond-latin-400-normal.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/inter-latin-400-normal.woff2" />
 
-    <!-- Preload the LCP hero image. Browser picks the best format its UA advertises. -->
+    <!-- Preload the LCP hero image (same on mobile + desktop) — cultural-icon.
+         The other two persona portraits rotate in later; prefetch only. -->
     <link rel="preload" as="image" href="/img/personas/cultural-icon.avif" type="image/avif" fetchpriority="high" />
     <link rel="preload" as="image" href="/img/personas/cultural-icon.webp" type="image/webp" />
+    <link rel="prefetch" as="image" href="/img/personas/stateswoman.avif" type="image/avif" />
+    <link rel="prefetch" as="image" href="/img/personas/philanthropist.avif" type="image/avif" />
 
     <title>Dr. Pratima Totla — Leadership with Purpose</title>
 

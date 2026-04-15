@@ -169,7 +169,7 @@ function ContactGrid() {
                 <Magnetic>
                   <a
                     href={`mailto:${CONTACT.email}?subject=Inquiry%20for%20Dr.%20Pratima%20Totla`}
-                    className="font-display italic text-2xl md:text-3xl text-gold-gradient hover:text-shadow-gold transition-all break-all"
+                    className="font-display italic text-2xl md:text-3xl text-gold-gradient hover:text-shadow-gold transition-all break-words"
                     data-cursor="hover"
                   >
                     {CONTACT.email}
@@ -179,11 +179,11 @@ function ContactGrid() {
                 <div className="grid grid-cols-2 gap-5 mt-auto">
                   <div>
                     <div className="font-label text-[15px] tracking-[0.32em] uppercase text-gold-300/70 mb-2">For Press</div>
-                    <a href={`mailto:${CONTACT.email}?subject=Press%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-base break-all">{CONTACT.email}</a>
+                    <a href={`mailto:${CONTACT.email}?subject=Press%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-base break-words">{CONTACT.email}</a>
                   </div>
                   <div>
                     <div className="font-label text-[15px] tracking-[0.32em] uppercase text-gold-300/70 mb-2">For Bookings</div>
-                    <a href={`mailto:${CONTACT.email}?subject=Booking%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-base break-all">{CONTACT.email}</a>
+                    <a href={`mailto:${CONTACT.email}?subject=Booking%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-base break-words">{CONTACT.email}</a>
                   </div>
                 </div>
               </div>
