@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  * Fullscreen lightbox with keyboard nav (arrows + Esc) and click-to-close backdrop.
  * Pass `images` (string[]) and `index` (current). Parent controls open/close + index.
  */
-export default function Lightbox({ images = [], index = 0, onClose, onIndex }) {
+export default function Lightbox({ images = [], alts = [], index = 0, onClose, onIndex, label = 'Dr. Pratima Totla' }) {
   const isOpen = index !== null && index !== undefined && index >= 0 && index < images.length;
 
   const next = useCallback(() => onIndex && onIndex((index + 1) % images.length), [index, images.length, onIndex]);
@@ -87,7 +87,7 @@ export default function Lightbox({ images = [], index = 0, onClose, onIndex }) {
             >
               <img
                 src={images[index]}
-                alt=""
+                alt={alts[index] || `${label} — photograph ${index + 1} of ${images.length}`}
                 className="block max-w-full max-h-[88vh] object-contain rounded-lg luxe-shadow"
               />
             </motion.div>

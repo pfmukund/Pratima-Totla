@@ -9,4 +9,4 @@ Disallow: /
 User-agent: MJ12bot
 Disallow: /
 
-Sitemap: https://pratimatotla.in/sitemap.xml
+Sitemap: https://pratimatotla.com/sitemap.xml

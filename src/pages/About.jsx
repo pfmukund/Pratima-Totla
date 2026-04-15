@@ -95,7 +95,7 @@ function OriginStory() {
               >
                 <div
                   className="w-full h-full bg-cover bg-center transition-transform duration-1000 hover:scale-105"
-                  style={{ backgroundImage: 'url(/img/about/portrait-1.png)' }}
+                  style={{ backgroundImage: 'url(/img/about/portrait-1.webp)' }}
                 />
               </div>
             </Tilt3D>

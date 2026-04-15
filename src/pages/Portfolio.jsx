@@ -49,7 +49,7 @@ const SECTIONS = [
 const SECTION_GALLERY = {
   leadership: ['/img/portfolio/leadership-1.webp', '/img/portfolio/leadership-2.webp'],
   pageantry: [
-    '/img/portfolio/pageantry-1.png',
+    '/img/portfolio/pageantry-1.webp',
     '/img/portfolio/pageantry-2.webp',
     '/img/portfolio/pageantry-3.webp',
     '/img/portfolio/pageantry-4.webp',
@@ -103,7 +103,7 @@ function PortfolioHero() {
   return (
     <section className="relative min-h-[70svh] flex items-end overflow-hidden bg-ink pt-32 md:pt-40 pb-16">
       <Spotlight size={900} intensity={0.18} />
-      <div className="absolute inset-0 -z-10 opacity-30 bg-cover bg-center" style={{ backgroundImage: 'url(/img/portfolio/portfolio-hero.png)' }} />
+      <div className="absolute inset-0 -z-10 opacity-30 bg-cover bg-center" style={{ backgroundImage: 'url(/img/portfolio/portfolio-hero.webp)' }} />
       <div className="absolute inset-0 -z-[5] bg-gradient-to-t from-ink via-ink/80 to-transparent" />
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 w-full">
         <Reveal>

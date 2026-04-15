@@ -6,7 +6,7 @@
  * Pass per-page title/description/canonical/image. Person JSON-LD is included
  * once on every page so search engines have rich subject understanding.
  */
-const SITE_URL = 'https://pratimatotla.in';
+const SITE_URL = 'https://pratimatotla.com';
 const DEFAULT_IMAGE = '/img/personas/cultural-icon.webp';
 
 const PERSON_LD = {

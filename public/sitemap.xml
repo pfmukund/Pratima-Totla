@@ -2,40 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://pratimatotla.in/</loc>
+    <loc>https://pratimatotla.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://pratimatotla.in/img/personas/stateswoman.jpg</image:loc>
+      <image:loc>https://pratimatotla.com/img/personas/cultural-icon.webp</image:loc>
       <image:title>Dr. Pratima Totla — National Secretary, RPI</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://pratimatotla.in/about</loc>
+    <loc>https://pratimatotla.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://pratimatotla.in/img/about/about-hero.jpg</image:loc>
+      <image:loc>https://pratimatotla.com/img/about/about-hero.webp</image:loc>
       <image:title>About Dr. Pratima Totla</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://pratimatotla.in/portfolio</loc>
+    <loc>https://pratimatotla.com/portfolio</loc>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://pratimatotla.in/contact</loc>
+    <loc>https://pratimatotla.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pratimatotla.in/privacy</loc>
+    <loc>https://pratimatotla.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://pratimatotla.in/terms</loc>
+    <loc>https://pratimatotla.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

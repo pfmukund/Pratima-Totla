@@ -1,15 +1,36 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import path from 'node:path'
+import os from 'node:os'
 
-// Base path for production: when deploying to a custom domain, this should be '/'.
-// For GitHub Pages project sites (e.g. pfmukund.github.io/Pratima-Totla/), it
-// must be '/Pratima-Totla/'. We choose via env var so dev + Pages + custom
-// domain all work without manual editing.
-//   VITE_BASE=/Pratima-Totla/  (CI for GitHub Pages)
-//   VITE_BASE=/                (custom domain)
-//   (unset)                    (dev → '/')
+// Keep Vite's dep-optimizer cache outside of Dropbox/OneDrive to avoid file-lock
+// stalls on Windows (native fs watches + cloud sync fight each other).
+const CACHE_DIR = path.join(os.tmpdir(), 'vite-pratima-totla')
+
 export default defineConfig({
+  cacheDir: CACHE_DIR,
   plugins: [react(), tailwindcss()],
   base: process.env.VITE_BASE || '/',
+  build: {
+    target: 'es2020',
+    cssCodeSplit: true,
+    sourcemap: false,
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 700,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (id.includes('react-pageflip')) return 'pageflip'
+          if (id.includes('lenis')) return 'lenis'
+          if (id.includes('framer-motion')) return 'motion'
+          if (id.includes('react-router')) return 'router'
+          if (id.includes('react-dom') || id.includes('scheduler')) return 'react-dom'
+          if (id.includes('node_modules/react/')) return 'react'
+          return 'vendor'
+        },
+      },
+    },
+  },
 })
