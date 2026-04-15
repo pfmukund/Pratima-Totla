@@ -11,7 +11,7 @@ export default function Privacy() {
         <Spotlight size={900} intensity={0.12} />
         <div className="max-w-3xl mx-auto px-6 md:px-10">
           <Reveal>
-            <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-4">
+            <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-4">
               Office Policy
             </div>
             <h1 className="font-display text-5xl md:text-7xl text-cream leading-[1.02] mb-4">
@@ -61,7 +61,7 @@ export default function Privacy() {
             {CONTACT.email}
           </a>.
         </Section>
-        <p className="font-label text-[10px] tracking-[0.32em] uppercase text-mute pt-4">
+        <p className="font-label text-[16px] tracking-[0.32em] uppercase text-mute pt-4">
           Last updated · {new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
         </p>
       </section>

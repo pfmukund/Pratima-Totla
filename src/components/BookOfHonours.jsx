@@ -276,21 +276,21 @@ const AwardPage = forwardRef(({ award, pageNum, total }, ref) => (
       <CornerOrnament position="bl" /><CornerOrnament position="br" />
 
       {/* Top: honour numeral */}
-      <div style={{ position: 'absolute', top: 32, left: 0, right: 0, textAlign: 'center', zIndex: 2 }}>
-        <span style={{ fontFamily: 'Cinzel, serif', fontSize: 10, letterSpacing: '0.55em', textTransform: 'uppercase', color: '#9C8754' }}>
+      <div style={{ position: 'absolute', top: 34, left: 0, right: 0, textAlign: 'center', zIndex: 2 }}>
+        <span style={{ fontFamily: 'Cinzel, serif', fontSize: 12, letterSpacing: '0.55em', textTransform: 'uppercase', color: '#9C8754' }}>
           Honour {romanize(pageNum)} of {romanize(total)}
         </span>
       </div>
 
-      {/* Body — typography-only (no medallion star). Larger sizes. */}
+      {/* Body — typography-only. Text sizes bumped ~20% for legibility. */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 2, display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center', padding: '64px 42px 60px',
+        alignItems: 'center', justifyContent: 'center', padding: '70px 46px 64px',
       }}>
         {/* TITLE */}
         <h3 style={{
-          fontFamily: 'Cinzel, serif', fontSize: 'clamp(22px, 3vw, 30px)', color: '#1A1610',
-          lineHeight: 1.18, letterSpacing: '0.04em', textAlign: 'center', marginBottom: 12,
+          fontFamily: 'Cinzel, serif', fontSize: 'clamp(26px, 3.6vw, 36px)', color: '#1A1610',
+          lineHeight: 1.18, letterSpacing: '0.04em', textAlign: 'center', marginBottom: 14,
           maxWidth: '96%', fontWeight: 500,
         }}>
           {award.title}
@@ -298,49 +298,49 @@ const AwardPage = forwardRef(({ award, pageNum, total }, ref) => (
 
         {/* Org */}
         <p style={{
-          fontFamily: 'Cinzel, serif', fontSize: 11, letterSpacing: '0.36em', textTransform: 'uppercase',
-          color: '#7A6228', textAlign: 'center', marginBottom: 22, maxWidth: '90%',
+          fontFamily: 'Cinzel, serif', fontSize: 14, letterSpacing: '0.36em', textTransform: 'uppercase',
+          color: '#7A6228', textAlign: 'center', marginBottom: 24, maxWidth: '90%',
         }}>
           {award.org}
         </p>
 
         {/* Ornament divider — pure gold rule, no star */}
-        <div style={{ height: 1, width: 130, background: 'linear-gradient(to right, transparent, #B8941F 30%, #E8C975 50%, #B8941F 70%, transparent)', marginBottom: 22 }} />
+        <div style={{ height: 1, width: 150, background: 'linear-gradient(to right, transparent, #B8941F 30%, #E8C975 50%, #B8941F 70%, transparent)', marginBottom: 24 }} />
 
         {/* Year — the visual anchor */}
         <p style={{
-          fontFamily: 'Cormorant Garamond, serif', fontSize: 64, color: '#2C2416',
+          fontFamily: 'Cormorant Garamond, serif', fontSize: 77, color: '#2C2416',
           letterSpacing: '0.05em', marginBottom: 4, lineHeight: 1, fontWeight: 400,
         }}>
           {award.year}
         </p>
-        <span style={{ fontFamily: 'Cinzel, serif', fontSize: 9, letterSpacing: '0.55em', textTransform: 'uppercase', color: '#8B7340', marginBottom: 22 }}>
+        <span style={{ fontFamily: 'Cinzel, serif', fontSize: 11, letterSpacing: '0.55em', textTransform: 'uppercase', color: '#8B7340', marginBottom: 24 }}>
           Anno
         </span>
 
         {/* Small gold rule */}
-        <div style={{ height: 1, width: 60, background: 'linear-gradient(to right, transparent, #B8941F, transparent)', marginBottom: 22 }} />
+        <div style={{ height: 1, width: 72, background: 'linear-gradient(to right, transparent, #B8941F, transparent)', marginBottom: 24 }} />
 
         {/* Description — even bigger for legibility */}
         <p style={{
-          fontFamily: 'Cormorant Garamond, serif', fontSize: 18, color: '#2A241D',
+          fontFamily: 'Cormorant Garamond, serif', fontSize: 22, color: '#2A241D',
           lineHeight: 1.55, fontStyle: 'italic', textAlign: 'center', maxWidth: '94%',
         }}>
           “{award.description}”
         </p>
 
-        {/* Signature block — no star */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: 'auto', paddingTop: 24 }}>
-          <div style={{ height: 1, width: 80, background: 'linear-gradient(to right, transparent, #B8941F, transparent)' }} />
-          <span style={{ fontFamily: 'Cinzel, serif', fontSize: 10, letterSpacing: '0.42em', textTransform: 'uppercase', color: '#7A6228' }}>
+        {/* Signature block */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: 'auto', paddingTop: 26 }}>
+          <div style={{ height: 1, width: 96, background: 'linear-gradient(to right, transparent, #B8941F, transparent)' }} />
+          <span style={{ fontFamily: 'Cinzel, serif', fontSize: 12, letterSpacing: '0.42em', textTransform: 'uppercase', color: '#7A6228' }}>
             Dr. Pratima Totla
           </span>
         </div>
       </div>
 
       {/* Page number — bottom right */}
-      <div style={{ position: 'absolute', bottom: 22, right: 32, zIndex: 2 }}>
-        <span style={{ fontFamily: 'Cinzel, serif', fontSize: 10, letterSpacing: '0.32em', color: '#A99A78' }}>
+      <div style={{ position: 'absolute', bottom: 24, right: 34, zIndex: 2 }}>
+        <span style={{ fontFamily: 'Cinzel, serif', fontSize: 12, letterSpacing: '0.32em', color: '#A99A78' }}>
           {String(pageNum).padStart(2, '0')} / {String(total).padStart(2, '0')}
         </span>
       </div>
@@ -403,7 +403,7 @@ export default function BookOfHonours({ awards = AWARDS, compact = false }) {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <p className="font-label text-[10px] tracking-[0.5em] uppercase text-gold-300 mb-4">
+          <p className="font-label text-[16px] tracking-[0.5em] uppercase text-gold-300 mb-4">
             A Legacy of Excellence
           </p>
           <h2 className="font-display text-5xl md:text-7xl text-cream leading-[1.02]">
@@ -412,7 +412,7 @@ export default function BookOfHonours({ awards = AWARDS, compact = false }) {
           </h2>
           <div className="flex items-center justify-center gap-5 mt-6">
             <div className="h-px w-20 bg-gradient-to-r from-transparent to-gold-300/40" />
-            <span className="font-label text-[11px] tracking-[0.35em] text-gold-300/80">
+            <span className="font-label text-[15px] tracking-[0.35em] text-gold-300/80">
               {total} RECOGNITIONS
             </span>
             <div className="h-px w-20 bg-gradient-to-l from-transparent to-gold-300/40" />
@@ -529,7 +529,7 @@ export default function BookOfHonours({ awards = AWARDS, compact = false }) {
                   className="w-11 h-11 rounded-full border border-gold-400/30 grid place-items-center text-gold-300/70 hover:border-gold-300 hover:text-gold-200 transition-colors">
                   <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" /></svg>
                 </button>
-                <span className="font-label text-[10px] tracking-[0.3em] text-cream/40 uppercase">
+                <span className="font-label text-[16px] tracking-[0.3em] text-cream/40 uppercase">
                   {currentPage === 0 ? 'Cover' : `${currentPage} / ${total}`}
                 </span>
                 <button onClick={() => setCurrentPage((p) => Math.min(total, p + 1))} aria-label="Next" data-cursor="hover"
@@ -544,11 +544,11 @@ export default function BookOfHonours({ awards = AWARDS, compact = false }) {
               style={{ filter: 'drop-shadow(0 50px 100px rgba(0,0,0,0.7)) drop-shadow(0 20px 40px rgba(0,0,0,0.5)) drop-shadow(0 0 2px rgba(212,175,55,0.15))' }}>
               <HTMLFlipBook
                 ref={bookRef}
-                width={460}
-                height={560}
+                width={506}
+                height={616}
                 size="fixed"
-                minWidth={300}
-                maxWidth={580}
+                minWidth={330}
+                maxWidth={640}
                 minHeight={360}
                 maxHeight={620}
                 showCover
@@ -581,7 +581,7 @@ export default function BookOfHonours({ awards = AWARDS, compact = false }) {
         {/* Hint */}
         {isMobile === false && (
           <div className="text-center mt-8">
-            <p className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300/50">
+            <p className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300/50">
               — Tap or Drag a Corner to Turn the Page —
             </p>
           </div>
@@ -600,7 +600,7 @@ export default function BookOfHonours({ awards = AWARDS, compact = false }) {
               className="group w-12 h-12 rounded-full border border-gold-400/30 grid place-items-center text-gold-300/70 hover:border-gold-300 hover:text-gold-200 hover:bg-gold-400/5 transition-all duration-300">
               <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" /></svg>
             </button>
-            <div className="font-label text-[10px] tracking-[0.4em] uppercase text-cream/40 min-w-[160px] text-center">
+            <div className="font-label text-[16px] tracking-[0.4em] uppercase text-cream/40 min-w-[160px] text-center">
               {(() => {
                 const page = Math.min(currentPage + 1, totalDesktopPages);
                 return `Page ${String(page).padStart(2, '0')} of ${String(totalDesktopPages).padStart(2, '0')}`;

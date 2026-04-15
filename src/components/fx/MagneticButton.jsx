@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
  * Magnetic wrapper. The child element's translation springs toward the cursor
  * when hovered within `radius` px of the element's center.
  */
-export default function Magnetic({ children, strength = 0.5, radius = 140, className = '' }) {
+export default function Magnetic({ children, strength = 0.42, radius = 140, className = '' }) {
   const ref = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);

@@ -92,7 +92,7 @@ export default function CustomCursor() {
       >
         {variant === 'view' && (
           <span
-            className="absolute inset-0 grid place-items-center text-[9px] font-label tracking-[0.18em] uppercase text-gold-400"
+            className="absolute inset-0 grid place-items-center text-[13px] font-label tracking-[0.18em] uppercase text-gold-400"
             style={{ color: '#d4af37' }}
           >
             View

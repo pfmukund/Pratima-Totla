@@ -23,7 +23,6 @@ export default defineConfig({
         manualChunks(id) {
           if (!id.includes('node_modules')) return
           if (id.includes('react-pageflip')) return 'pageflip'
-          if (id.includes('lenis')) return 'lenis'
           if (id.includes('framer-motion')) return 'motion'
           if (id.includes('react-router')) return 'router'
           if (id.includes('react-dom') || id.includes('scheduler')) return 'react-dom'

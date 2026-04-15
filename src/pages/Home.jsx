@@ -1,26 +1,28 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import {
   NAME, TAGLINE, PERSONAS, KEY_FACTS, PRESS, NEWSPAPERS_INDIA, MANIFESTO,
 } from '../data/profile.js';
-import ParticleField from '../components/fx/ParticleField.jsx';
-import Spotlight from '../components/fx/Spotlight.jsx';
 import ScrambleText from '../components/fx/ScrambleText.jsx';
 import Magnetic from '../components/fx/MagneticButton.jsx';
 import Tilt3D from '../components/fx/Tilt3D.jsx';
 import Marquee from '../components/fx/Marquee.jsx';
 import Reveal, { StaggerReveal, StaggerItem } from '../components/fx/Reveal.jsx';
 import TypewriterIdentity from '../components/fx/TypewriterIdentity.jsx';
-import GeoDecoration from '../components/fx/GeoDecoration.jsx';
 import CountUp from '../components/fx/CountUp.jsx';
-import HeroOrbs from '../components/fx/HeroOrbs.jsx';
 import SEO from '../components/SEO.jsx';
+import useIsDesktop from '../components/fx/useIsDesktop.js';
+
+// Heavy decorative effects are desktop-only — lazy-loaded so mobile never
+// downloads or parses them. Each resolves to its own Vite chunk.
+const ParticleField = lazy(() => import('../components/fx/ParticleField.jsx'));
+const Spotlight = lazy(() => import('../components/fx/Spotlight.jsx'));
+const GeoDecoration = lazy(() => import('../components/fx/GeoDecoration.jsx'));
 
 const IDENTITIES = [
   'NATIONAL SECRETARY · RPI (ATHAWALE)',
   'MRS. INDIA FASHION ICON · 2017',
-  'PRODUCER · THE HUNDRED BUCKS',
   'INTERNATIONAL CHAIRPERSON · ACFI',
   'HONORARY DOCTORATE · USA',
   'BRAND AMBASSADOR · APJ KALAM CAMPAIGN',
@@ -49,14 +51,13 @@ export default function Home() {
    ========================================================================= */
 function Hero() {
   const [activePersona, setActivePersona] = useState(1);
+  const isDesktop = useIsDesktop();
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
   const yMid = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
-  // Cursor-tracked parallax for the title — different layers move at different
-  // speeds, creating a strong 3D depth-of-field illusion.
+  // Cursor-tracked parallax for the title — desktop only; otherwise zero cost.
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const titleX = useSpring(useTransform(mx, [-1, 1], [-22, 22]), { damping: 30, stiffness: 90 });
@@ -66,6 +67,7 @@ function Hero() {
   const tagX = useSpring(useTransform(mx, [-1, 1], [-10, 10]), { damping: 30, stiffness: 90 });
 
   useEffect(() => {
+    if (!isDesktop) return;
     const onMove = (e) => {
       const x = (e.clientX / window.innerWidth) * 2 - 1;
       const y = (e.clientY / window.innerHeight) * 2 - 1;
@@ -74,72 +76,69 @@ function Hero() {
     };
     window.addEventListener('mousemove', onMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMove);
-  }, [mx, my]);
+  }, [mx, my, isDesktop]);
+
+  const active = PERSONAS[activePersona];
+  const avifSrc = active.image.replace(/\.webp$/, '.avif');
 
   return (
     <section
       ref={heroRef}
       className="relative min-h-[100svh] overflow-hidden bg-ink isolate flex flex-col"
     >
-      <HeroOrbs count={7} />
-      {/* Layer 0 — Particle field */}
-      <motion.div style={{ y: yBg }} className="absolute inset-0 -z-10">
-        <ParticleField density={90} />
-      </motion.div>
+      {/* Background stack — everything decorative stays BEHIND the portrait so
+         the photo reads as the top-most element. Order (back → front):
+         dark gradient → vignette → orbs → particles → spotlight → geo. */}
+      <div className="absolute inset-0 -z-[30] bg-gradient-to-r from-ink via-ink/50 to-transparent md:via-ink/20 pointer-events-none" />
+      <div className="absolute inset-0 -z-[29] vignette opacity-40 pointer-events-none" />
+      {isDesktop && (
+        <Suspense fallback={null}>
+          <div className="absolute inset-0 -z-[24] pointer-events-none">
+            <ParticleField density={50} />
+          </div>
+          <div className="absolute inset-0 -z-[23] pointer-events-none">
+            <Spotlight size={900} intensity={0.22} />
+          </div>
+          <div className="absolute inset-0 -z-[22] pointer-events-none">
+            <GeoDecoration size={420} position="right" />
+          </div>
+        </Suspense>
+      )}
 
-      {/* Layer 1 — Spotlight that follows mouse */}
-      <Spotlight size={900} intensity={0.22} />
-
-      {/* Layer 2 — Persona portrait fade-cross.
-         Top inset clears the nav; portrait sized down (~80%) so the crown
-         doesn't graze the navbar. Anchored to bottom-right. */}
+      {/* LCP element — <picture> with AVIF + WebP, eagerly loaded + high priority.
+         Lives ABOVE every decorative layer so the photo reads crisp and saturated.
+         The soft left-edge mask keeps the text column readable. */}
       <motion.div
         style={{ y: yMid, opacity }}
-        className="absolute top-28 md:top-36 lg:top-40 bottom-0 inset-x-0 -z-[5] flex items-end justify-end overflow-hidden"
+        className="absolute top-28 md:top-36 lg:top-40 bottom-0 inset-x-0 z-[2] flex items-end justify-end overflow-hidden pointer-events-none"
       >
-        <AnimatePresence mode="wait">
-          {PERSONAS.map((p, i) =>
-            i === activePersona ? (
-              <motion.div
-                key={p.id}
-                initial={{ opacity: 0, scale: 1.04, filter: 'blur(20px)' }}
-                animate={{ opacity: 0.7, scale: 1, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, scale: 1.02, filter: 'blur(20px)' }}
-                transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-0 md:inset-y-0 md:right-0 md:left-[28%] lg:left-[42%]"
-              >
-                <div
-                  className="w-full h-full origin-bottom-right scale-[1.08]"
-                  style={{
-                    backgroundImage: `url(${p.image})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'right bottom',
-                    maskImage:
-                      'linear-gradient(to left, rgba(0,0,0,1) 35%, rgba(0,0,0,0.4) 75%, transparent 100%)',
-                    WebkitMaskImage:
-                      'linear-gradient(to left, rgba(0,0,0,1) 35%, rgba(0,0,0,0.4) 75%, transparent 100%)',
-                  }}
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: `radial-gradient(ellipse at 75% 60%, ${p.accent}, transparent 60%)`,
-                    mixBlendMode: 'screen',
-                  }}
-                />
-              </motion.div>
-            ) : null
-          )}
-        </AnimatePresence>
+        <div className="absolute inset-0 md:inset-y-0 md:right-0 md:left-[28%] lg:left-[42%]">
+          <picture>
+            <source srcSet={avifSrc} type="image/avif" />
+            <source srcSet={active.image} type="image/webp" />
+            <img
+              src={active.image}
+              alt={`Dr. Pratima Totla — ${active.title}`}
+              width="1200"
+              height="1600"
+              fetchPriority="high"
+              decoding="async"
+              className="absolute bottom-0 right-0 h-full w-auto max-w-none origin-bottom-right scale-[1.08] object-contain object-right-bottom opacity-100 transition-opacity duration-700"
+              style={{
+                maskImage: 'linear-gradient(to left, rgba(0,0,0,1) 60%, rgba(0,0,0,0.85) 80%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to left, rgba(0,0,0,1) 60%, rgba(0,0,0,0.85) 80%, transparent 100%)',
+              }}
+            />
+          </picture>
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(ellipse at 75% 60%, ${active.accent}, transparent 60%)`,
+              mixBlendMode: 'screen',
+            }}
+          />
+        </div>
       </motion.div>
-
-      {/* Layer 3 — Vignette + dark gradient over portrait */}
-      <div className="absolute inset-0 -z-[4] bg-gradient-to-r from-ink via-ink/85 to-transparent md:via-ink/60 pointer-events-none" />
-      <div className="absolute inset-0 -z-[3] vignette pointer-events-none" />
-
-      {/* Decorative rotating gold filigree behind hero */}
-      <GeoDecoration size={420} position="right" />
 
       {/* Layer 4 — Content */}
       <div className="relative z-10 flex-1 grid grid-rows-[auto_1fr_auto] max-w-[1400px] w-full mx-auto px-6 md:px-10 pt-32 md:pt-40 pb-10">
@@ -147,7 +146,7 @@ function Hero() {
         <Reveal delay={0.1}>
           <div className="flex items-center gap-4">
             <span className="block w-12 h-px bg-gold-300/60" />
-            <span className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300">
+            <span className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300">
               The Official Portfolio
             </span>
           </div>
@@ -164,7 +163,7 @@ function Hero() {
           >
             <TypewriterIdentity
               identities={IDENTITIES}
-              className="font-label text-[11px] md:text-xs tracking-[0.32em] uppercase text-gold-300"
+              className="font-label text-[15px] md:text-[17px] tracking-[0.28em] uppercase text-gold-300 font-semibold"
             />
           </motion.div>
 
@@ -183,7 +182,7 @@ function Hero() {
                 rotateY: titleRotY,
                 transformStyle: 'preserve-3d',
               }}
-              className="font-display leading-[0.92] text-[18vw] md:text-[10rem] lg:text-[13rem] -tracking-[0.04em] will-change-transform"
+              className="font-display leading-[0.92] text-[18vw] md:text-[180px] lg:text-[234px] -tracking-[0.04em] will-change-transform"
             >
               <ScrambleText
                 text="Pratima"
@@ -214,7 +213,7 @@ function Hero() {
             <Magnetic strength={0.25}>
               <Link
                 to="/portfolio"
-                data-cursor="view"
+                data-cursor="hover"
                 className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink no-tap-highlight"
               >
                 <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
@@ -240,7 +239,7 @@ function Hero() {
         {/* Persona switcher rail (bottom) */}
         <div className="mt-12">
           <Reveal delay={1.6}>
-            <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300/80 mb-5">
+            <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300/80 mb-5">
               Three Lives, One Vision · Hover to Reveal
             </div>
           </Reveal>
@@ -263,17 +262,17 @@ function Hero() {
                   />
                 )}
                 <div className="flex items-baseline gap-3 mb-2">
-                  <span className="font-label text-[10px] tracking-[0.3em] text-gold-400/80">
+                  <span className="font-label text-[16px] tracking-[0.3em] text-gold-400/80">
                     {p.eyebrow}
                   </span>
-                  <span className="font-label text-[10px] tracking-[0.3em] uppercase text-fog">
+                  <span className="font-label text-[16px] tracking-[0.3em] uppercase text-fog">
                     Persona
                   </span>
                 </div>
                 <div className="font-display text-2xl md:text-3xl text-cream leading-tight mb-1">
                   {p.title}
                 </div>
-                <div className="font-label text-[10px] tracking-[0.18em] uppercase text-gold-300/90">
+                <div className="font-label text-[16px] tracking-[0.18em] uppercase text-gold-300/90">
                   {p.role}
                 </div>
               </button>
@@ -290,7 +289,7 @@ function Hero() {
         className="hidden md:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 z-20 flex-col items-center gap-3 text-gold-300/60"
       >
         <span
-          className="font-label text-[9px] tracking-[0.4em] uppercase"
+          className="font-label text-[15px] tracking-[0.4em] uppercase"
           style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
         >
           Scroll
@@ -313,19 +312,18 @@ function Stats() {
     { value: 250, suffix: '+', label: 'Newsrooms Reached' },
     { value: 15, suffix: '+', label: 'National & International Honours' },
     { value: 8, suffix: '', label: 'Years of Public Leadership' },
-    { value: 1100, suffix: '+', label: 'Members \u00b7 Anti-Corruption Foundation' },
   ];
   return (
-    <section className="relative py-20 md:py-24 border-y border-gold-400/15 overflow-hidden bg-ink">
+    <section className="relative py-10 md:py-14 border-y border-gold-400/15 overflow-hidden bg-ink">
       <Spotlight size={1100} intensity={0.08} />
-      <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-6">
+      <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 grid grid-cols-3 gap-4 md:gap-6 place-items-center">
         {stats.map((s, i) => (
           <Reveal key={i} delay={i * 0.08}>
-            <div className="text-center md:text-left" data-cursor="hover">
-              <div className="font-display text-5xl md:text-7xl lg:text-8xl text-gold-gradient leading-none mb-3">
+            <div className="text-center" data-cursor="hover">
+              <div className="font-display text-3xl md:text-5xl lg:text-6xl text-gold-gradient leading-none mb-2">
                 <CountUp end={s.value} suffix={s.suffix} duration={1.8} />
               </div>
-              <div className="font-label text-[10px] tracking-[0.32em] uppercase text-bone/80">
+              <div className="font-label text-[11px] md:text-[13px] tracking-[0.28em] uppercase text-bone/80">
                 {s.label}
               </div>
             </div>
@@ -383,7 +381,7 @@ function Personas() {
       <Reveal>
         <div className="flex items-center gap-4 mb-6">
           <span className="block w-10 h-px bg-gold-300" />
-          <span className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300">
+          <span className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300">
             The Three Lives
           </span>
         </div>
@@ -404,7 +402,7 @@ function Personas() {
             <Tilt3D max={9} className="h-full">
               <article
                 className="group relative h-full p-8 md:p-9 rounded-2xl border border-gold-400/15 bg-coal/70 overflow-hidden backdrop-blur-sm flex flex-col luxe-shadow"
-                data-cursor="view"
+                data-cursor="hover"
               >
                 <div
                   className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-700 -z-10 bg-cover bg-center"
@@ -415,15 +413,15 @@ function Personas() {
 
                 <div className="relative flex items-baseline gap-3 mb-6">
                   <span className="font-display italic text-3xl text-gold-300/80">{p.eyebrow}</span>
-                  <span className="font-label text-[10px] tracking-[0.32em] uppercase text-bone/60">
+                  <span className="font-label text-[16px] tracking-[0.32em] uppercase text-bone/60">
                     Persona
                   </span>
                 </div>
 
-                <h3 className="relative font-display text-4xl md:text-5xl text-cream mb-3 leading-none">
+                <h3 className="relative font-display text-3xl md:text-4xl text-cream mb-3 leading-[1.05] break-words min-h-[2.5em] flex items-start">
                   {p.title}
                 </h3>
-                <div className="relative font-label text-[11px] tracking-[0.22em] uppercase text-gold-300 mb-1">
+                <div className="relative font-label text-[15px] tracking-[0.22em] uppercase text-gold-300 mb-1">
                   {p.role}
                 </div>
                 <div className="relative font-display italic text-bone/80 mb-6">{p.org}</div>
@@ -434,7 +432,7 @@ function Personas() {
 
                 <Link
                   to="/portfolio"
-                  className="relative inline-flex items-center gap-2 font-label text-[10px] tracking-[0.32em] uppercase text-gold-300 group-hover:text-gold-100 transition-colors"
+                  className="relative inline-flex items-center gap-2 font-label text-[16px] tracking-[0.32em] uppercase text-gold-300 group-hover:text-gold-100 transition-colors"
                   data-cursor="hover"
                 >
                   Explore the Body of Work
@@ -465,7 +463,7 @@ function ManifestoSection() {
           <Reveal className="lg:col-span-5">
             <div className="flex items-center gap-4 mb-5">
               <span className="block w-10 h-px bg-gold-300" />
-              <span className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300">
+              <span className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300">
                 The Manifesto
               </span>
             </div>
@@ -506,7 +504,7 @@ function ManifestoSection() {
           <Magnetic>
             <Link
               to="/portfolio"
-              className="inline-flex items-center gap-3 font-label text-[11px] tracking-[0.32em] uppercase text-gold-300 hover:text-gold-100 transition-colors"
+              className="inline-flex items-center gap-3 font-label text-[15px] tracking-[0.32em] uppercase text-gold-300 hover:text-gold-100 transition-colors"
               data-cursor="hover"
             >
               See all seven pillars
@@ -528,7 +526,7 @@ function PressStrip() {
       <Reveal>
         <div className="flex items-center gap-4 mb-5">
           <span className="block w-10 h-px bg-gold-300" />
-          <span className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300">
+          <span className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300">
             As Featured On
           </span>
         </div>
@@ -574,7 +572,7 @@ function PressStrip() {
       </div>
 
       <Reveal delay={0.2} className="mt-14">
-        <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300/80 mb-5">
+        <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300/80 mb-5">
           Indian Newspaper Coverage · December 2025
         </div>
         <div className="flex flex-wrap gap-2">
@@ -606,7 +604,7 @@ function ClosingCTA() {
       <Spotlight size={1100} intensity={0.12} />
       <div className="relative max-w-4xl mx-auto px-6 text-center">
         <Reveal>
-          <div className="font-label text-[10px] tracking-[0.5em] uppercase text-gold-300 mb-7">
+          <div className="font-label text-[16px] tracking-[0.5em] uppercase text-gold-300 mb-7">
             Connect with the Office
           </div>
           <h2 className="font-display text-5xl md:text-7xl lg:text-8xl text-cream leading-[1.02] mb-8">
@@ -621,7 +619,7 @@ function ClosingCTA() {
             <Magnetic>
               <Link
                 to="/contact"
-                data-cursor="view"
+                data-cursor="hover"
                 className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink"
               >
                 <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">

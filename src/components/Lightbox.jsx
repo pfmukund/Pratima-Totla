@@ -50,7 +50,7 @@ export default function Lightbox({ images = [], alts = [], index = 0, onClose, o
           </button>
 
           {/* Counter */}
-          <div className="absolute top-7 left-6 font-label text-[11px] tracking-[0.32em] uppercase text-gold-300 z-10">
+          <div className="absolute top-7 left-6 font-label text-[15px] tracking-[0.32em] uppercase text-gold-300 z-10">
             {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
           </div>
 
@@ -94,7 +94,7 @@ export default function Lightbox({ images = [], alts = [], index = 0, onClose, o
           </AnimatePresence>
 
           {/* Hint */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-label text-[9px] tracking-[0.32em] uppercase text-gold-300/60 z-10">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-label text-[15px] tracking-[0.32em] uppercase text-gold-300/60 z-10">
             ← → to navigate · ESC to close
           </div>
         </motion.div>

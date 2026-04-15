@@ -22,7 +22,7 @@ export default function AnimatedTimeline() {
       <div className="mb-16">
         <div className="flex items-center gap-4 mb-5">
           <span className="block w-10 h-px bg-gold-300" />
-          <span className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300">
+          <span className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300">
             The Trajectory
           </span>
         </div>
@@ -105,7 +105,7 @@ function TimelineRow({ item, index }) {
           <div className="font-display text-7xl md:text-8xl lg:text-9xl text-gold-static leading-[0.85] mb-2">
             {item.year}
           </div>
-          <div className="font-label text-[11px] tracking-[0.32em] uppercase text-gold-300/90">
+          <div className="font-label text-[15px] tracking-[0.32em] uppercase text-gold-300/90">
             {item.label}
           </div>
         </motion.div>

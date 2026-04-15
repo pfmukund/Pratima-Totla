@@ -74,7 +74,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-8 mb-12">
           {/* Navigate — left on desktop, left half on mobile */}
           <div className="md:col-span-3 md:order-1">
-            <h4 className="font-label text-[10px] tracking-[0.32em] text-gold-300 uppercase mb-5">
+            <h4 className="font-label text-[16px] tracking-[0.32em] text-gold-300 uppercase mb-5">
               Navigate
             </h4>
             <nav className="flex flex-col gap-3">
@@ -128,7 +128,7 @@ export default function Footer() {
 
           {/* Office — right on desktop, right half on mobile */}
           <div className="md:col-span-4 md:order-3 md:text-right md:flex md:flex-col md:items-end">
-            <h4 className="font-label text-[10px] tracking-[0.32em] text-gold-300 uppercase mb-5">
+            <h4 className="font-label text-[16px] tracking-[0.32em] text-gold-300 uppercase mb-5">
               The Office
             </h4>
             <a
@@ -138,7 +138,7 @@ export default function Footer() {
             >
               {CONTACT.email}
             </a>
-            <div className="font-label text-[10px] tracking-[0.28em] text-gold-300/70 uppercase mb-1">
+            <div className="font-label text-[16px] tracking-[0.28em] text-gold-300/70 uppercase mb-1">
               Across India
             </div>
             <div className="font-display italic text-bone text-sm">{CONTACT.city}</div>
@@ -147,13 +147,13 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="border-t border-gold-400/15 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="font-label text-[10px] tracking-[0.2em] text-mute uppercase">
+          <p className="font-label text-[16px] tracking-[0.2em] text-mute uppercase">
             © {new Date().getFullYear()} The Office of {NAME}
           </p>
           <div className="flex items-center gap-4">
             <Link
               to="/privacy"
-              className="font-label text-[10px] tracking-[0.2em] text-mute hover:text-gold-300 transition-colors duration-300 uppercase"
+              className="font-label text-[16px] tracking-[0.2em] text-mute hover:text-gold-300 transition-colors duration-300 uppercase"
               data-cursor="hover"
             >
               Privacy Policy
@@ -161,7 +161,7 @@ export default function Footer() {
             <span className="text-mute/30">·</span>
             <Link
               to="/terms"
-              className="font-label text-[10px] tracking-[0.2em] text-mute hover:text-gold-300 transition-colors duration-300 uppercase"
+              className="font-label text-[16px] tracking-[0.2em] text-mute hover:text-gold-300 transition-colors duration-300 uppercase"
               data-cursor="hover"
             >
               Terms & Conditions

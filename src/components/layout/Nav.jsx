@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Magnetic from '../fx/MagneticButton.jsx';
+import { prefetchRoute } from '../../routes.js';
 
 const ITEMS = [
   { to: '/', label: 'Home' },
@@ -42,7 +43,7 @@ export default function Nav() {
               data-cursor="hover"
               className="inline-block origin-left transition-transform duration-300 ease-out hover:scale-[1.2]"
             >
-              <span className="font-display italic text-2xl md:text-3xl text-cream hover:text-gold-200 transition-colors duration-500 tracking-wide leading-none">
+              <span className="font-display italic text-[29px] md:text-[36px] text-cream hover:text-gold-200 transition-colors duration-500 tracking-wide leading-none">
                 Pratima Totla
               </span>
             </Link>
@@ -55,8 +56,11 @@ export default function Nav() {
                 <NavLink
                   to={item.to}
                   end={item.to === '/'}
+                  onMouseEnter={() => prefetchRoute(item.to)}
+                  onFocus={() => prefetchRoute(item.to)}
+                  onTouchStart={() => prefetchRoute(item.to)}
                   className={({ isActive }) =>
-                    `nav-link relative inline-block origin-center px-5 py-2.5 font-display italic text-[20px] leading-none tracking-wide transition-all duration-300 ease-out hover:scale-[1.2] ${
+                    `nav-link relative inline-block origin-center px-5 py-2.5 font-display italic text-[23px] leading-none tracking-wide transition-all duration-300 ease-out hover:scale-[1.2] ${
                       isActive ? 'text-gold-300' : 'text-bone hover:text-gold-200'
                     }`
                   }
@@ -136,6 +140,7 @@ export default function Nav() {
                     to={item.to}
                     end={item.to === '/'}
                     onClick={() => setMobileOpen(false)}
+                    onTouchStart={() => prefetchRoute(item.to)}
                     className={({ isActive }) =>
                       `font-display italic text-4xl ${isActive ? 'text-gold-static' : 'text-cream'} hover:text-gold-300 transition-colors`
                     }

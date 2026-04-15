@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
  * 3D tilt card. Cursor controls perspective rotation. Inner content can use
  * `data-tilt-layer={depth}` to gain parallax depth (deeper = moves more).
  */
-export default function Tilt3D({ children, max = 12, scale = 1.02, glare = true, className = '' }) {
+export default function Tilt3D({ children, max = 10, scale = 1.015, glare = true, className = '' }) {
   const ref = useRef(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);

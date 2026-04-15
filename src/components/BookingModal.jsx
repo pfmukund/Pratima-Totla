@@ -101,7 +101,7 @@ export default function BookingModal({ open, onClose }) {
 
             {sent ? (
               <div className="text-center py-12">
-                <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-4">Thank You</div>
+                <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-4">Thank You</div>
                 <h3 className="font-display text-4xl md:text-5xl text-cream mb-3">
                   <span className="italic">Your letter is</span><br />
                   <span className="text-gold-gradient">on its way.</span>
@@ -113,7 +113,7 @@ export default function BookingModal({ open, onClose }) {
               </div>
             ) : (
               <>
-                <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-3">
+                <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-3">
                   Speaker Booking
                 </div>
                 <h3 className="font-display text-3xl md:text-4xl text-cream leading-[1.05] mb-2">
@@ -133,7 +133,7 @@ export default function BookingModal({ open, onClose }) {
                           key={k}
                           onClick={() => setForm((f) => ({ ...f, kind: k }))}
                           data-cursor="hover"
-                          className={`px-3.5 py-1.5 rounded-full font-label text-[10px] tracking-[0.18em] uppercase border transition-all duration-300 ${
+                          className={`px-3.5 py-1.5 rounded-full font-label text-[16px] tracking-[0.18em] uppercase border transition-all duration-300 ${
                             form.kind === k
                               ? 'border-gold-300 bg-gold-400/10 text-gold-100'
                               : 'border-gold-400/20 text-bone hover:border-gold-300/60 hover:text-cream'
@@ -186,7 +186,7 @@ export default function BookingModal({ open, onClose }) {
                       <button
                         type="submit"
                         disabled={submitting}
-                        data-cursor="view"
+                        data-cursor="hover"
                         className="group inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-gold-gradient text-ink disabled:opacity-50"
                       >
                         <span className="font-body text-[13px] tracking-[0.14em] uppercase font-bold">
@@ -211,7 +211,7 @@ export default function BookingModal({ open, onClose }) {
 function Field({ label, required, children }) {
   return (
     <div>
-      <label className="font-label text-[10px] tracking-[0.3em] uppercase text-gold-300/80 block mb-2">
+      <label className="font-label text-[16px] tracking-[0.3em] uppercase text-gold-300/80 block mb-2">
         {label}{required && <span className="text-gold-300 ml-1">*</span>}
       </label>
       {children}

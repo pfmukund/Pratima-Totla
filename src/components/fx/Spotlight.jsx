@@ -11,6 +11,15 @@ export default function Spotlight({ size = 600, intensity = 0.18, color = '212, 
   const pos = useRef({ x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 });
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    // Desktop / fine pointer only — cursor-driven effect has no value on touch
+    // devices and costs a continuous rAF loop. Return early on mobile / reduced
+    // motion / slow connections.
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 768px)');
+    const prm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const conn = navigator.connection || {};
+    if (!mq.matches || prm || conn.saveData || conn.effectiveType === '2g') return;
+
     const el = elRef.current;
     if (!el) return;
     targetRef.current = el.parentElement;
@@ -50,7 +59,7 @@ export default function Spotlight({ size = 600, intensity = 0.18, color = '212, 
     <div
       ref={elRef}
       aria-hidden
-      className={`pointer-events-none absolute inset-0 ${className}`}
+      className={`pointer-events-none absolute inset-0 hidden md:block ${className}`}
       style={{
         background: `radial-gradient(${size}px circle at var(--mx, 50%) var(--my, 50%), rgba(${color}, ${intensity}), transparent 60%)`,
       }}

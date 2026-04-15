@@ -12,13 +12,14 @@ export default function ParticleField({ density = 70, color = '212, 175, 55' }) 
   const rafRef = useRef(0);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    // Desktop-only. Canvas + rAF + 50+ particles with shadow blur is an
+    // expensive paint loop; not worth running on mobile or low-power devices.
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 768px)');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-    // Skip entirely on Save-Data and very slow connections — battery + data
     const conn = navigator.connection || {};
-    if (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g') return;
-    // Halve density on small screens
-    const adjustedDensity = window.innerWidth < 768 ? Math.floor(density / 2) : density;
+    if (!mq.matches || reduced || conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g') return;
+    const adjustedDensity = density;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -120,7 +121,7 @@ export default function ParticleField({ density = 70, color = '212, 175, 55' }) 
     <canvas
       ref={canvasRef}
       aria-hidden
-      className="pointer-events-none absolute inset-0 w-full h-full"
+      className="pointer-events-none absolute inset-0 w-full h-full hidden md:block"
     />
   );
 }

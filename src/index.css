@@ -24,27 +24,13 @@
   --font-display: "Cormorant Garamond", "Times New Roman", serif;
   --font-label: "Cinzel", "Cormorant Garamond", serif;
   --font-body: "Inter", system-ui, -apple-system, sans-serif;
-
-  --animate-shimmer: shimmer 3s linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-pulse-slow: pulseSlow 4s ease-in-out infinite;
-  --animate-marquee: marquee 35s linear infinite;
-  --animate-marquee-reverse: marqueeReverse 40s linear infinite;
-  --animate-fade-up: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-grain: grain 8s steps(10) infinite;
 }
 
+/* Keyframes kept because they're referenced by custom utilities below
+   (shimmer → .text-gold-gradient) and by the Marquee component. */
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-@keyframes pulseSlow {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
 }
 @keyframes marquee {
   0% { transform: translateX(0); }
@@ -54,27 +40,14 @@
   0% { transform: translateX(-50%); }
   100% { transform: translateX(0); }
 }
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(36px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-@keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  20% { transform: translate(-15%, 5%); }
-  30% { transform: translate(7%, -25%); }
-  40% { transform: translate(-5%, 25%); }
-  50% { transform: translate(-15%, 10%); }
-  60% { transform: translate(15%, 0%); }
-  70% { transform: translate(0%, 15%); }
-  80% { transform: translate(3%, 35%); }
-  90% { transform: translate(-10%, 10%); }
-}
 
 @layer base {
   :root {
     color-scheme: dark;
-    /* Global typography scale boost — 18% larger by default, 20% on small text */
+    /* Tight-calibrated root so rem-based spacing stays predictable. Larger
+       *text* was achieved by bumping explicit px values on labels/CTAs, not
+       by inflating root — inflating root balloons all padding/margins and
+       breaks card + section proportions. */
     font-size: 18px;
   }
   @media (max-width: 768px) {
@@ -88,17 +61,23 @@
     font-feature-settings: "ss01", "cv11", "kern";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Native smooth scroll replaces Lenis — saves 19KB + a rAF loop. */
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
   }
 
   body {
     background-color: var(--color-ink);
     color: var(--color-cream);
     overflow-x: hidden;
-    cursor: none;
   }
 
-  @media (max-width: 768px) {
-    body { cursor: auto; }
+  /* Custom cursor only on real desktop pointers. Default cursor otherwise. */
+  @media (hover: hover) and (pointer: fine) and (min-width: 768px) {
+    body { cursor: none; }
+    a, button { cursor: none; }
   }
 
   ::selection {
@@ -120,12 +99,6 @@
     line-height: 1.05;
   }
 
-  a, button {
-    cursor: none;
-  }
-  @media (max-width: 768px) {
-    a, button { cursor: pointer; }
-  }
 }
 
 @layer utilities {
@@ -184,13 +157,16 @@
 
   .grain-overlay {
     position: fixed;
-    inset: -50%;
+    inset: 0;
     pointer-events: none;
     z-index: 9000;
-    opacity: 0.07;
+    opacity: 0.05;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
-    animation: grain 8s steps(10) infinite;
+  }
+  /* Mobile / slow devices: skip the grain entirely — no perf benefit. */
+  @media (max-width: 768px), (prefers-reduced-motion: reduce) {
+    .grain-overlay { display: none; }
   }
 
   .vignette {
@@ -200,11 +176,6 @@
   .gold-rule {
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.6) 50%, transparent 100%);
-  }
-
-  .gold-rule-vertical {
-    width: 1px;
-    background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%);
   }
 
   .luxe-shadow {
@@ -227,10 +198,10 @@
   border-radius: 4px;
 }
 
-/* Hide native cursor entirely on desktop where custom cursor is active */
-@media (hover: hover) and (pointer: fine) {
-  *, *::before, *::after { cursor: none !important; }
-}
+/* Cursor handling: default cursor for mobile / coarse pointers. On desktop
+   the DesktopFX chunk (CustomCursor) takes over and hides the native one
+   via body { cursor: none } in @layer base. No global * selector — that
+   forced unnecessary style recalc. */
 
 /* Honour reduced motion */
 @media (prefers-reduced-motion: reduce) {

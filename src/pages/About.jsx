@@ -42,7 +42,7 @@ function AboutHero() {
 
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 w-full">
         <Reveal>
-          <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+          <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
             The Story · Chapter One
           </div>
         </Reveal>
@@ -72,7 +72,7 @@ function OriginStory() {
     <section className="relative py-28 md:py-36 max-w-[1400px] mx-auto px-6 md:px-10">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         <Reveal className="lg:col-span-5 lg:sticky lg:top-32">
-          <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+          <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
             Year Forty
           </div>
           <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1.02] mb-6">
@@ -105,7 +105,7 @@ function OriginStory() {
             <StaggerItem>
               <p className="font-display italic text-2xl md:text-3xl text-cream leading-snug mb-6 border-l-2 border-gold-300 pl-6">
                 &ldquo;The grandeur of your dreams is the reflection of your impact.&rdquo;
-                <span className="block font-label not-italic text-[11px] tracking-[0.32em] uppercase text-gold-300/80 mt-4">— Dr. Pratima Totla</span>
+                <span className="block font-label not-italic text-[13px] tracking-[0.32em] uppercase text-gold-300/80 mt-4">— Dr. Pratima Totla</span>
               </p>
             </StaggerItem>
             <StaggerItem>
@@ -157,7 +157,7 @@ function Heritage() {
         </Reveal>
         <div className="lg:col-span-7 order-1 lg:order-2 space-y-8">
           <Reveal>
-            <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+            <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
               Heritage & Mind
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1.02] mb-6">
@@ -198,14 +198,14 @@ function DreamBig() {
 
       <div className="relative max-w-5xl mx-auto px-6 text-center">
         <Reveal>
-          <div className="font-label text-[10px] tracking-[0.5em] uppercase text-gold-300 mb-8">
+          <div className="font-label text-[16px] tracking-[0.5em] uppercase text-gold-300 mb-8">
             The Founding Conviction
           </div>
           <p className="font-display italic text-4xl md:text-6xl lg:text-7xl text-cream leading-[1.05] mb-8">
             &ldquo;<span className="text-gold-gradient">Dream</span> not because the world expects
             it, but because <span className="italic">dignity</span> demands it.&rdquo;
           </p>
-          <div className="font-label text-[11px] tracking-[0.32em] uppercase text-gold-300">
+          <div className="font-label text-[15px] tracking-[0.32em] uppercase text-gold-300">
             — {NAME}
           </div>
         </Reveal>

@@ -75,11 +75,11 @@ function ContactHero({ onBook }) {
       <div className="absolute inset-0 -z-[5] vignette pointer-events-none" />
 
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-7">
           <Reveal>
             <div className="flex items-center gap-4 mb-5">
               <span className="block w-12 h-px bg-gold-300/60" />
-              <span className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300">
+              <span className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300">
                 Concierge of Correspondence
               </span>
             </div>
@@ -100,7 +100,7 @@ function ContactHero({ onBook }) {
               <Magnetic>
                 <button
                   onClick={onBook}
-                  data-cursor="view"
+                  data-cursor="hover"
                   className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink"
                 >
                   <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
@@ -125,21 +125,21 @@ function ContactHero({ onBook }) {
         </div>
 
         {/* Right-side info card */}
-        <Reveal delay={0.4} className="lg:col-span-4">
-          <div className="glass-dark rounded-2xl p-7 luxe-shadow space-y-5">
+        <Reveal delay={0.4} className="lg:col-span-5">
+          <div className="glass-dark rounded-2xl p-10 md:p-12 luxe-shadow space-y-7">
             <div>
-              <div className="font-label text-[9px] tracking-[0.32em] uppercase text-gold-300/80 mb-2">Office Hours</div>
-              <div className="font-display italic text-cream text-lg">Monday — Saturday<br/>10:00 — 18:30 IST</div>
+              <div className="font-label text-[17px] tracking-[0.32em] uppercase text-gold-300/85 mb-3">Office Hours</div>
+              <div className="font-display italic text-cream text-xl md:text-2xl leading-snug">Monday — Saturday<br/>10:00 — 18:30 IST</div>
             </div>
             <div className="gold-rule" />
             <div>
-              <div className="font-label text-[9px] tracking-[0.32em] uppercase text-gold-300/80 mb-2">Currently Located</div>
-              <div className="font-display italic text-cream text-lg">{CONTACT.city}</div>
+              <div className="font-label text-[17px] tracking-[0.32em] uppercase text-gold-300/85 mb-3">Currently Located</div>
+              <div className="font-display italic text-cream text-xl md:text-2xl leading-snug">{CONTACT.city}</div>
             </div>
             <div className="gold-rule" />
             <div>
-              <div className="font-label text-[9px] tracking-[0.32em] uppercase text-gold-300/80 mb-2">Average Response</div>
-              <div className="font-display italic text-cream text-lg">3 — 5 working days</div>
+              <div className="font-label text-[17px] tracking-[0.32em] uppercase text-gold-300/85 mb-3">Average Response</div>
+              <div className="font-display italic text-cream text-xl md:text-2xl leading-snug">3 — 5 working days</div>
             </div>
           </div>
         </Reveal>
@@ -153,16 +153,16 @@ function ContactGrid() {
     <section className="relative py-24 md:py-32 bg-ink overflow-hidden">
       <Spotlight size={900} intensity={0.1} />
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          {/* Email card */}
-          <Reveal className="lg:col-span-5 lg:sticky lg:top-32">
-            <Tilt3D max={6}>
-              <div className="p-10 md:p-12 rounded-2xl border-gold-gradient bg-coal/80 luxe-shadow" data-cursor="hover">
-                <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+          {/* Email card — stretches to match the right column's height */}
+          <Reveal className="lg:col-span-5 h-full">
+            <Tilt3D max={6} className="h-full">
+              <div className="h-full p-10 md:p-14 rounded-2xl border-gold-gradient bg-coal/80 luxe-shadow flex flex-col" data-cursor="hover">
+                <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-6">
                   Direct Correspondence
                 </div>
-                <div className="font-display text-cream text-2xl mb-3">Write a letter.</div>
-                <p className="text-fog text-sm leading-relaxed mb-8">
+                <div className="font-display text-cream text-3xl md:text-4xl mb-4">Write a letter.</div>
+                <p className="text-fog text-base md:text-lg leading-relaxed mb-10">
                   For substantive enquiries — the kind that benefit from sentences instead of tags
                   — please write to the Office. Letters are read.
                 </p>
@@ -170,20 +170,20 @@ function ContactGrid() {
                   <a
                     href={`mailto:${CONTACT.email}?subject=Inquiry%20for%20Dr.%20Pratima%20Totla`}
                     className="font-display italic text-2xl md:text-3xl text-gold-gradient hover:text-shadow-gold transition-all break-all"
-                    data-cursor="view"
+                    data-cursor="hover"
                   >
                     {CONTACT.email}
                   </a>
                 </Magnetic>
-                <div className="gold-rule my-8" />
-                <div className="grid grid-cols-2 gap-5">
+                <div className="gold-rule my-10" />
+                <div className="grid grid-cols-2 gap-5 mt-auto">
                   <div>
-                    <div className="font-label text-[9px] tracking-[0.32em] uppercase text-gold-300/70 mb-1">For Press</div>
-                    <a href={`mailto:${CONTACT.email}?subject=Press%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-sm">{CONTACT.email}</a>
+                    <div className="font-label text-[15px] tracking-[0.32em] uppercase text-gold-300/70 mb-2">For Press</div>
+                    <a href={`mailto:${CONTACT.email}?subject=Press%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-base break-all">{CONTACT.email}</a>
                   </div>
                   <div>
-                    <div className="font-label text-[9px] tracking-[0.32em] uppercase text-gold-300/70 mb-1">For Bookings</div>
-                    <a href={`mailto:${CONTACT.email}?subject=Booking%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-sm">{CONTACT.email}</a>
+                    <div className="font-label text-[15px] tracking-[0.32em] uppercase text-gold-300/70 mb-2">For Bookings</div>
+                    <a href={`mailto:${CONTACT.email}?subject=Booking%20Inquiry`} className="font-display italic text-bone hover:text-gold-300 transition-colors text-base break-all">{CONTACT.email}</a>
                   </div>
                 </div>
               </div>
@@ -193,7 +193,7 @@ function ContactGrid() {
           {/* Social */}
           <div className="lg:col-span-7">
             <Reveal>
-              <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+              <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
                 Or Connect on Social
               </div>
               <h2 className="font-display text-4xl md:text-5xl text-cream leading-[1.02] mb-3">
@@ -224,7 +224,7 @@ function ContactGrid() {
                         <h3 className="font-display text-2xl text-cream group-hover:text-gold-100 transition-colors">
                           {c.name}
                         </h3>
-                        <span className="font-label text-[10px] tracking-[0.22em] uppercase text-gold-300/70">
+                        <span className="font-label text-[16px] tracking-[0.22em] uppercase text-gold-300/70">
                           {c.handle}
                         </span>
                       </div>
@@ -259,7 +259,7 @@ function Letter() {
       <Spotlight size={1100} intensity={0.12} />
       <div className="relative max-w-3xl mx-auto px-6">
         <Reveal>
-          <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5 text-center">
+          <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5 text-center">
             A Composed Letter
           </div>
           <h2 className="font-display text-4xl md:text-6xl text-cream leading-[1.02] text-center mb-3">
@@ -277,7 +277,7 @@ function Letter() {
             className="glass-dark rounded-2xl p-8 md:p-10 luxe-shadow space-y-6"
           >
             <div>
-              <label className="font-label text-[10px] tracking-[0.32em] uppercase text-gold-300/80 block mb-3">
+              <label className="font-label text-[16px] tracking-[0.32em] uppercase text-gold-300/80 block mb-3">
                 Purpose
               </label>
               <div className="flex flex-wrap gap-2">
@@ -287,7 +287,7 @@ function Letter() {
                     type="button"
                     onClick={() => setPurpose(p)}
                     data-cursor="hover"
-                    className={`px-4 py-2 rounded-full font-label text-[10px] tracking-[0.18em] uppercase border transition-all duration-300 ${
+                    className={`px-4 py-2 rounded-full font-label text-[16px] tracking-[0.18em] uppercase border transition-all duration-300 ${
                       purpose === p
                         ? 'border-gold-300 bg-gold-400/10 text-gold-100'
                         : 'border-gold-400/20 text-bone hover:border-gold-300/60 hover:text-cream'
@@ -301,7 +301,7 @@ function Letter() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label htmlFor="from-name" className="font-label text-[10px] tracking-[0.32em] uppercase text-gold-300/80 block mb-2">
+                <label htmlFor="from-name" className="font-label text-[16px] tracking-[0.32em] uppercase text-gold-300/80 block mb-2">
                   Your Name
                 </label>
                 <input
@@ -315,7 +315,7 @@ function Letter() {
                 />
               </div>
               <div>
-                <label htmlFor="from-email" className="font-label text-[10px] tracking-[0.32em] uppercase text-gold-300/80 block mb-2">
+                <label htmlFor="from-email" className="font-label text-[16px] tracking-[0.32em] uppercase text-gold-300/80 block mb-2">
                   Reply To
                 </label>
                 <input
@@ -331,7 +331,7 @@ function Letter() {
             </div>
 
             <div>
-              <label htmlFor="body" className="font-label text-[10px] tracking-[0.32em] uppercase text-gold-300/80 block mb-2">
+              <label htmlFor="body" className="font-label text-[16px] tracking-[0.32em] uppercase text-gold-300/80 block mb-2">
                 Your Message
               </label>
               <textarea
@@ -352,7 +352,7 @@ function Letter() {
               <Magnetic>
                 <button
                   type="submit"
-                  data-cursor="view"
+                  data-cursor="hover"
                   className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink"
                 >
                   <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
@@ -379,7 +379,7 @@ function FAQSection() {
     <section className="relative py-24 md:py-32 max-w-[1400px] mx-auto px-6 md:px-10">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
         <Reveal className="lg:col-span-5">
-          <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+          <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
             Before you write
           </div>
           <h2 className="font-display text-4xl md:text-6xl text-cream leading-[1.02]">

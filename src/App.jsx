@@ -2,27 +2,23 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { lazy, Suspense } from 'react';
 import Layout from './components/layout/Layout.jsx';
-import CustomCursor from './components/fx/CustomCursor.jsx';
-import CursorDust from './components/fx/CursorDust.jsx';
-import SmoothScroll from './components/fx/SmoothScroll.jsx';
+import DesktopFX from './components/fx/DesktopOnly.jsx';
 import PageTransition from './components/PageTransition.jsx';
 import AmbientAudio from './components/AmbientAudio.jsx';
-import LoadingCurtain from './components/LoadingCurtain.jsx';
 import ScrollProgress from './components/fx/ScrollProgress.jsx';
-import { LanguageProvider } from './context/LanguageContext.jsx';
-import Home from './pages/Home.jsx'; // Eager-load home for instant first paint
+import Home from './pages/Home.jsx';
+import { routeLoaders } from './routes.js';
 
-// Code-split secondary routes — saves ~200KB from initial bundle (react-pageflip etc.)
-const About = lazy(() => import('./pages/About.jsx'));
-const Portfolio = lazy(() => import('./pages/Portfolio.jsx'));
-const Contact = lazy(() => import('./pages/Contact.jsx'));
-const Privacy = lazy(() => import('./pages/Privacy.jsx'));
-const Terms = lazy(() => import('./pages/Terms.jsx'));
+const About = lazy(routeLoaders['/about']);
+const Portfolio = lazy(routeLoaders['/portfolio']);
+const Contact = lazy(routeLoaders['/contact']);
+const Privacy = lazy(routeLoaders['/privacy']);
+const Terms = lazy(routeLoaders['/terms']);
 
 function RouteFallback() {
   return (
     <div className="min-h-[60vh] grid place-items-center">
-      <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300/60 animate-pulse">
+      <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300/60 animate-pulse">
         Loading…
       </div>
     </div>
@@ -32,20 +28,16 @@ function RouteFallback() {
 export default function App() {
   const location = useLocation();
   return (
-    <LanguageProvider>
-      {/* Skip-to-content for screen reader / keyboard users */}
+    <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only fixed top-3 left-3 z-[10001] px-4 py-2 rounded-full bg-gold-gradient text-ink font-label text-[11px] tracking-[0.22em] uppercase"
+        className="sr-only focus:not-sr-only fixed top-3 left-3 z-[10001] px-4 py-2 rounded-full bg-gold-gradient text-ink font-body text-[13px] tracking-[0.14em] uppercase font-bold"
       >
         Skip to content
       </a>
 
-      <LoadingCurtain />
       <ScrollProgress />
-      <SmoothScroll />
-      <CursorDust />
-      <CustomCursor />
+      <DesktopFX />
       <PageTransition />
       <AmbientAudio />
       <div className="grain-overlay" aria-hidden />
@@ -62,6 +54,6 @@ export default function App() {
           </Route>
         </Routes>
       </AnimatePresence>
-    </LanguageProvider>
+    </>
   );
 }

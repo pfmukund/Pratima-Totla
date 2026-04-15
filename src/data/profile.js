@@ -190,8 +190,7 @@ export const SOCIALS = {
 };
 
 export const CONTACT = {
-  // ⚠️ TODO — confirm with Pratima\u2019s office. Defaulting to a sensible placeholder.
-  email: 'office@pratimatotla.in',
+  email: 'contact@pratimatotla.com',
   city: 'Jaipur \u00b7 Mumbai \u00b7 New Delhi',
   invitation:
     'For speaking engagements, civic collaborations, or media inquiries — please write to the office or connect on social media.',

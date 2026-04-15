@@ -28,7 +28,7 @@ function LazyBookSlot() {
   return (
     <div ref={ref} className="min-h-[400px]">
       {show ? (
-        <Suspense fallback={<div className="py-32 text-center font-label text-[10px] tracking-[0.4em] uppercase text-gold-300/60 animate-pulse">Opening the book…</div>}>
+        <Suspense fallback={<div className="py-32 text-center font-label text-[16px] tracking-[0.4em] uppercase text-gold-300/60 animate-pulse">Opening the book…</div>}>
           <BookOfHonours />
         </Suspense>
       ) : null}
@@ -107,7 +107,7 @@ function PortfolioHero() {
       <div className="absolute inset-0 -z-[5] bg-gradient-to-t from-ink via-ink/80 to-transparent" />
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 w-full">
         <Reveal>
-          <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+          <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
             The Body of Work
           </div>
         </Reveal>
@@ -134,7 +134,7 @@ function KeyFactsRibbon() {
         {KEY_FACTS.map((f, i) => (
           <Reveal key={i} delay={i * 0.05}>
             <div className="text-center md:text-left" data-cursor="hover">
-              <div className="font-label text-[9px] tracking-[0.32em] uppercase text-gold-300/80 mb-2">
+              <div className="font-label text-[15px] tracking-[0.32em] uppercase text-gold-300/80 mb-2">
                 {f.label}
               </div>
               <div className="font-display text-bone text-sm leading-snug">{f.value}</div>
@@ -205,8 +205,8 @@ function SectionNav() {
                 href={`#${s.id}`}
                 onClick={handleClick(s.id)}
                 data-cursor="hover"
-                className={`relative rounded-full font-label tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-500 ${
-                  grown ? 'px-6 py-2.5 text-[12px] md:text-[13px]' : 'px-3.5 py-1.5 text-[9px] md:text-[10px]'
+                className={`relative inline-block origin-center rounded-full font-label tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-300 ease-out hover:scale-[1.1] ${
+                  grown ? 'px-6 py-2.5 text-[14px] md:text-[13px]' : 'px-3.5 py-1.5 text-[13px] md:text-[14px]'
                 } ${isActive ? 'text-gold-100' : 'text-bone hover:text-gold-200'}`}
               >
                 {isActive && (
@@ -237,7 +237,7 @@ function Section({ id, eyebrow, title, lead, items, gallery = [], alt = false, g
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14">
           <Reveal className="lg:col-span-5">
-            <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+            <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
               {eyebrow}
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1.02]">
@@ -266,7 +266,7 @@ function Section({ id, eyebrow, title, lead, items, gallery = [], alt = false, g
                     <h3 className="font-display text-xl md:text-2xl text-cream leading-snug mb-1 group-hover:text-gold-100 transition-colors">
                       {it.title}
                     </h3>
-                    <div className="font-label text-[10px] tracking-[0.22em] uppercase text-gold-300/70">
+                    <div className="font-label text-[16px] tracking-[0.22em] uppercase text-gold-300/70">
                       {it.org}
                     </div>
                   </div>
@@ -335,7 +335,7 @@ function ManifestoFull() {
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14">
           <Reveal className="lg:col-span-5">
-            <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+            <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
               Manifesto
             </div>
             <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1.02] mb-4">
@@ -386,7 +386,7 @@ function PressArchive() {
     <section id="press" className="relative py-28 md:py-36 max-w-[1400px] mx-auto px-6 md:px-10">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
         <Reveal className="lg:col-span-5">
-          <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300 mb-5">
+          <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300 mb-5">
             Press Archive
           </div>
           <h2 className="font-display text-5xl md:text-6xl text-cream leading-[1.02]">
@@ -411,11 +411,11 @@ function PressArchive() {
               target="_blank"
               rel="noreferrer"
               className="group flex items-center justify-between p-5 rounded-lg border border-gold-400/15 bg-coal/70 hover:border-gold-300/50 hover:bg-coal transition-all duration-500"
-              data-cursor="view"
+              data-cursor="hover"
             >
               <div>
                 <div className="font-display text-xl text-cream group-hover:text-gold-static transition-colors">{p.name}</div>
-                <div className="font-label text-[9px] tracking-[0.28em] uppercase text-gold-300/60 mt-1">
+                <div className="font-label text-[15px] tracking-[0.28em] uppercase text-gold-300/60 mt-1">
                   Read original
                 </div>
               </div>
@@ -428,7 +428,7 @@ function PressArchive() {
       </StaggerReveal>
 
       <Reveal delay={0.15} className="mt-14">
-        <div className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300/80 mb-5">
+        <div className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300/80 mb-5">
           Indian Newspaper Coverage · December 2025
         </div>
         <div className="flex flex-wrap gap-2">

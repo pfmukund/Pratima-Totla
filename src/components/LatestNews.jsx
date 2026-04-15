@@ -32,7 +32,7 @@ export default function LatestNews() {
       <Reveal>
         <div className="flex items-center gap-4 mb-5">
           <span className="block w-10 h-px bg-gold-300" />
-          <span className="font-label text-[10px] tracking-[0.4em] uppercase text-gold-300">
+          <span className="font-label text-[16px] tracking-[0.4em] uppercase text-gold-300">
             Latest Headlines
           </span>
         </div>
@@ -52,7 +52,7 @@ export default function LatestNews() {
               href={h.url}
               target="_blank"
               rel="noreferrer"
-              data-cursor="view"
+              data-cursor="hover"
               className="group relative block p-7 rounded-xl border border-gold-400/15 bg-coal/60 hover:border-gold-300/50 hover:bg-coal transition-all duration-500 overflow-hidden"
             >
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
@@ -60,7 +60,7 @@ export default function LatestNews() {
               <div className="relative">
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-display italic text-gold-static text-lg">{h.outlet}</span>
-                  <span className="font-label text-[9px] tracking-[0.32em] uppercase text-bone/45">
+                  <span className="font-label text-[15px] tracking-[0.32em] uppercase text-bone/45">
                     {h.date}
                   </span>
                 </div>
@@ -68,7 +68,7 @@ export default function LatestNews() {
                   {h.headline}
                 </h3>
                 <p className="text-fog text-sm leading-relaxed mb-4">{h.blurb}</p>
-                <div className="flex items-center gap-2 font-label text-[10px] tracking-[0.32em] uppercase text-gold-300/80">
+                <div className="flex items-center gap-2 font-label text-[16px] tracking-[0.32em] uppercase text-gold-300/80">
                   Read original
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1">
                     <path d="M7 17L17 7M9 7h8v8" />
