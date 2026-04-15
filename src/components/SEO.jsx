@@ -7,7 +7,7 @@
  * once on every page so search engines have rich subject understanding.
  */
 const SITE_URL = 'https://pratimatotla.in';
-const DEFAULT_IMAGE = '/img/personas/stateswoman.webp';
+const DEFAULT_IMAGE = '/img/personas/cultural-icon.webp';
 
 const PERSON_LD = {
   '@context': 'https://schema.org',

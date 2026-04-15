@@ -14,7 +14,7 @@ export const PERSONAS = [
     org: 'Republican Party of India',
     description:
       'Appointed in December 2025 by Shri Ramdas Athawale, Union Minister of State for Social Justice and Empowerment. A mandate to deepen citizen-first politics, strengthen national outreach, and amplify women and youth participation.',
-    image: '/img/personas/stateswoman.webp',
+    image: '/img/personas/stateswoman.png',
     accent: 'rgba(212, 175, 55, 0.55)',
   },
   {
@@ -36,7 +36,7 @@ export const PERSONAS = [
     org: 'Anti-Corruption Foundation of India',
     description:
       'Architect of the "I Can" campaign empowering women to step beyond convention. National Brand Ambassador for the Dr. APJ Abdul Kalam Campaign. Advocate for the Lakshaya School for the differently-abled, the Pulwama tribute, and gender equality.',
-    image: '/img/personas/philanthropist.webp',
+    image: '/img/personas/philanthropist.png',
     accent: 'rgba(232, 193, 78, 0.55)',
   },
 ];

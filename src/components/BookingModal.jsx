@@ -189,7 +189,7 @@ export default function BookingModal({ open, onClose }) {
                         data-cursor="view"
                         className="group inline-flex items-center gap-3 pl-6 pr-2 py-2 rounded-full bg-gold-gradient text-ink disabled:opacity-50"
                       >
-                        <span className="font-label text-[11px] tracking-[0.22em] uppercase font-medium">
+                        <span className="font-body text-[13px] tracking-[0.14em] uppercase font-bold">
                           {submitting ? 'Composing…' : 'Send Inquiry'}
                         </span>
                         <span className="w-9 h-9 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">

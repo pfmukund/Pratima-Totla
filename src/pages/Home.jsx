@@ -48,7 +48,7 @@ export default function Home() {
    live persona switching driven by the row of persona buttons below.
    ========================================================================= */
 function Hero() {
-  const [activePersona, setActivePersona] = useState(0);
+  const [activePersona, setActivePersona] = useState(1);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
@@ -215,12 +215,12 @@ function Hero() {
               <Link
                 to="/portfolio"
                 data-cursor="view"
-                className="group inline-flex items-center gap-3 pl-7 pr-2 py-2 rounded-full bg-gold-gradient text-ink no-tap-highlight"
+                className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink no-tap-highlight"
               >
-                <span className="font-label text-[12px] tracking-[0.22em] uppercase font-medium">
+                <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
                   Enter the Portfolio
                 </span>
-                <span className="w-10 h-10 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
+                <span className="w-11 h-11 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
                   <ArrowRight />
                 </span>
               </Link>
@@ -229,7 +229,7 @@ function Hero() {
               <Link
                 to="/about"
                 data-cursor="hover"
-                className="font-label text-[12px] tracking-[0.22em] uppercase text-bone hover:text-gold-300 transition-colors px-5 py-3 border-b border-gold-400/30 hover:border-gold-300"
+                className="font-body text-[14px] tracking-[0.14em] uppercase font-semibold text-cream hover:text-gold-300 transition-colors px-5 py-3 border-b-2 border-gold-400/50 hover:border-gold-300"
               >
                 Read Her Story
               </Link>
@@ -622,12 +622,12 @@ function ClosingCTA() {
               <Link
                 to="/contact"
                 data-cursor="view"
-                className="group inline-flex items-center gap-3 pl-7 pr-2 py-2 rounded-full bg-gold-gradient text-ink"
+                className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink"
               >
-                <span className="font-label text-[12px] tracking-[0.22em] uppercase font-medium">
+                <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
                   Visit The Office
                 </span>
-                <span className="w-10 h-10 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
+                <span className="w-11 h-11 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
                   <ArrowRight />
                 </span>
               </Link>

@@ -101,12 +101,12 @@ function ContactHero({ onBook }) {
                 <button
                   onClick={onBook}
                   data-cursor="view"
-                  className="group inline-flex items-center gap-3 pl-7 pr-2 py-2 rounded-full bg-gold-gradient text-ink"
+                  className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink"
                 >
-                  <span className="font-label text-[12px] tracking-[0.22em] uppercase font-medium">
+                  <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
                     Invite Her to Speak
                   </span>
-                  <span className="w-10 h-10 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
+                  <span className="w-11 h-11 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-gold-300"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
                   </span>
                 </button>
@@ -115,7 +115,7 @@ function ContactHero({ onBook }) {
                 <a
                   href={`mailto:${CONTACT.email}`}
                   data-cursor="hover"
-                  className="font-label text-[12px] tracking-[0.22em] uppercase text-bone hover:text-gold-300 transition-colors px-5 py-3 border-b border-gold-400/30 hover:border-gold-300"
+                  className="font-body text-[14px] tracking-[0.14em] uppercase font-semibold text-cream hover:text-gold-300 transition-colors px-5 py-3 border-b-2 border-gold-400/50 hover:border-gold-300"
                 >
                   Or write a letter →
                 </a>
@@ -353,12 +353,12 @@ function Letter() {
                 <button
                   type="submit"
                   data-cursor="view"
-                  className="group inline-flex items-center gap-3 pl-7 pr-2 py-2 rounded-full bg-gold-gradient text-ink"
+                  className="group inline-flex items-center gap-3 pl-8 pr-2 py-2.5 rounded-full bg-gold-gradient text-ink"
                 >
-                  <span className="font-label text-[12px] tracking-[0.22em] uppercase font-medium">
+                  <span className="font-body text-[14px] tracking-[0.14em] uppercase font-bold">
                     Compose Letter
                   </span>
-                  <span className="w-10 h-10 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
+                  <span className="w-11 h-11 rounded-full bg-ink grid place-items-center transition-transform duration-500 group-hover:rotate-45">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-gold-300">
                       <path d="M5 12h14M13 5l7 7-7 7" />
                     </svg>
